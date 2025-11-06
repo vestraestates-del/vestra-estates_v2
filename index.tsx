@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+// FIX: Changed import to relative path with extension to ensure module resolution.
 import App from './App.tsx';
 
 const rootElement = document.getElementById('root');

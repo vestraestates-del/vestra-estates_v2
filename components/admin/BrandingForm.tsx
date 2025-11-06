@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import WidgetCard from '../ui/WidgetCard';
 import Button from '../ui/Button';
 import { LogoConfig } from '../icons/VestraLogo';
-import { BackgroundImages } from '../../App';
+// FIX: Added file extension to import from App.tsx to ensure module resolution.
+import { BackgroundImages } from '../../App.tsx';
 
 interface BrandingFormProps {
     onSave: (logo: LogoConfig, bgs: BackgroundImages) => void;

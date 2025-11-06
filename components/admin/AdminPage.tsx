@@ -1,5 +1,6 @@
+// This is the full content of components/admin/AdminPage.tsx
+
 import React, { useState } from 'react';
-import { LogoConfig } from '../icons/VestraLogo.tsx';
 import AdminSidebar from './AdminSidebar.tsx';
 import AdminDashboard from './modules/AdminDashboard.tsx';
 import LoginSecurity from './modules/LoginSecurity.tsx';
@@ -12,24 +13,26 @@ import Finance from './modules/Finance.tsx';
 import Cms from './modules/Cms.tsx';
 import Integrations from './modules/Integrations.tsx';
 import SystemSettings from './modules/SystemSettings.tsx';
-import { BackgroundImages } from '../../App.tsx';
-import { PortfolioItem } from '../../data/portfolioData.ts';
-import { OffMarketProperty } from '../../data/offMarketData.ts';
-import { ArtItem } from '../../data/artData.ts';
-import { WatchItem } from '../../data/watchesData.ts';
-import { AutomobileItem } from '../../data/automobilesData.ts';
-import { JewelItem } from '../../data/jewelsData.ts';
-import { WineItem } from '../../data/winesData.ts';
+
+import type { LogoConfig } from '../icons/VestraLogo.tsx';
+import type { BackgroundImages } from '../../App.tsx';
+import type { PortfolioItem } from '../../data/portfolioData.ts';
+import type { OffMarketProperty } from '../../data/offMarketData.ts';
+import type { ArtItem } from '../../data/artData.ts';
+import type { WatchItem } from '../../data/watchesData.ts';
+import type { AutomobileItem } from '../../data/automobilesData.ts';
+import type { JewelItem } from '../../data/jewelsData.ts';
+import type { WineItem } from '../../data/winesData.ts';
+import { MockUser } from '../../data/userData.ts';
+
+export type AdminSection = 'dashboard' | 'security' | 'users' | 'properties' | 'services' | 'invitations' | 'crm' | 'finance' | 'cms' | 'integrations' | 'settings';
 
 interface AdminPageProps {
-    // Branding and Content
-    onBrandingChange: (logo: LogoConfig, bgs: BackgroundImages) => void;
+    siteContent: { slogan: string; siteTitle: string; metaDescription: string; };
+    onSaveContent: (content: { slogan: string; siteTitle: string; metaDescription: string; }) => void;
+    onSaveBranding: (logo: LogoConfig, bgs: BackgroundImages) => void;
     currentLogo: LogoConfig;
     currentBgs: BackgroundImages;
-    siteContent: { slogan: string; siteTitle: string; metaDescription: string; };
-    onSiteContentSave: (content: { slogan: string; siteTitle: string; metaDescription: string; }) => void;
-
-    // Data Collections
     portfolioItems: PortfolioItem[];
     setPortfolioItems: React.Dispatch<React.SetStateAction<PortfolioItem[]>>;
     offMarketProperties: OffMarketProperty[];
@@ -44,68 +47,36 @@ interface AdminPageProps {
     setJewelCollection: React.Dispatch<React.SetStateAction<JewelItem[]>>;
     wineCollection: WineItem[];
     setWineCollection: React.Dispatch<React.SetStateAction<WineItem[]>>;
+    mockUsers: { [key: string]: MockUser };
+    setMockUsers: React.Dispatch<React.SetStateAction<{ [key: string]: MockUser }>>;
 }
-
-
-export type AdminSection = 
-    'dashboard' | 
-    'security' | 
-    'users' | 
-    'properties' | 
-    'services' | 
-    'invitations' | 
-    'crm' | 
-    'finance' | 
-    'cms' | 
-    'integrations' | 
-    'settings';
 
 const AdminPage: React.FC<AdminPageProps> = (props) => {
     const [activeSection, setActiveSection] = useState<AdminSection>('dashboard');
 
     const renderSection = () => {
         switch (activeSection) {
-            case 'dashboard':
-                return <AdminDashboard />;
-            case 'security':
-                return <LoginSecurity />;
-            case 'users':
-                return <UserManagement />;
-            case 'properties':
-                return <PropertyManagement 
-                    portfolioItems={props.portfolioItems} setPortfolioItems={props.setPortfolioItems}
-                    offMarketProperties={props.offMarketProperties} setOffMarketProperties={props.setOffMarketProperties}
-                    artCollection={props.artCollection} setArtCollection={props.setArtCollection}
-                    watchCollection={props.watchCollection} setWatchCollection={props.setWatchCollection}
-                    automobileCollection={props.automobileCollection} setAutomobileCollection={props.setAutomobileCollection}
-                    jewelCollection={props.jewelCollection} setJewelCollection={props.setJewelCollection}
-                    wineCollection={props.wineCollection} setWineCollection={props.setWineCollection}
-                />;
-            case 'services':
-                return <ServiceDesk />;
-            case 'invitations':
-                return <InvitationSystem />;
-            case 'crm':
-                return <Crm />;
-            case 'finance':
-                return <Finance />;
-            case 'cms':
-                return <Cms siteContent={props.siteContent} onSave={props.onSiteContentSave} />;
-            case 'integrations':
-                return <Integrations />;
-            case 'settings':
-                return <SystemSettings onSave={props.onBrandingChange} currentLogo={props.currentLogo} currentBgs={props.currentBgs} />;
-            default:
-                return <AdminDashboard />;
+            case 'dashboard': return <AdminDashboard />;
+            case 'security': return <LoginSecurity currentUserEmail="admin@vestra.com" handleChangeAdminPassword={() => ({ success: true, message: 'Password changed successfully (demo)'})} />;
+            case 'users': return <UserManagement users={Object.values(props.mockUsers)} setUsers={props.setMockUsers} />;
+            case 'properties': return <PropertyManagement {...props} />;
+            case 'services': return <ServiceDesk />;
+            case 'invitations': return <InvitationSystem />;
+            case 'crm': return <Crm />;
+            case 'finance': return <Finance />;
+            case 'cms': return <Cms siteContent={props.siteContent} onSave={props.onSaveContent} />;
+            case 'integrations': return <Integrations />;
+            case 'settings': return <SystemSettings onSave={props.onSaveBranding} currentLogo={props.currentLogo} currentBgs={props.currentBgs} />;
+            default: return <AdminDashboard />;
         }
     };
 
     return (
-        <div className="flex h-full">
+        <div className="h-full flex">
             <AdminSidebar activeSection={activeSection} onNavigate={setActiveSection} />
-            <main className="flex-1 p-4 md:p-8 h-full overflow-y-auto bg-black/20">
+            <div className="flex-1 p-8 overflow-y-auto">
                 {renderSection()}
-            </main>
+            </div>
         </div>
     );
 };

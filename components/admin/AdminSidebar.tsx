@@ -1,5 +1,6 @@
 import React from 'react';
 import * as Icons from '../icons/EliteIcons.tsx';
+// FIX: Corrected import path for AdminPage.tsx to ensure module resolution.
 import { AdminSection } from './AdminPage.tsx';
 
 interface AdminSidebarProps {

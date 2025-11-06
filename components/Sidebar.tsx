@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { VestraLogo, LogoConfig } from './icons/VestraLogo';
 import LanguageSelector from './ui/LanguageSelector';
-// FIX: Import GenerationalPage type to use in SidebarProps and add file extension
+// FIX: Corrected import path for App.tsx to ensure module resolution.
 import type { User, GenerationalPage } from '../App.tsx';
 import * as Icons from './icons/EliteIcons';
 import { useLocalization } from '../localization/LocalizationContext';
@@ -12,7 +12,6 @@ interface SidebarProps {
   onLogout: () => void;
   user: User;
   logoConfig: LogoConfig;
-  // FIX: Add onGenerationalOfficeNav to the component's props interface
   onGenerationalOfficeNav: (page: GenerationalPage) => void;
 }
 

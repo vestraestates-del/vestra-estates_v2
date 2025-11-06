@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { marketIntelligenceCategories, marketIntelligenceReports, MarketIntelligenceReport } from '../data/marketIntelligenceData';
-import type { User } from '../App';
+// FIX: Added file extension to import from App.tsx to ensure module resolution.
+import type { User } from '../App.tsx';
 import type { CircleMember } from '../data/circleData';
 import { useLocalization } from '../localization/LocalizationContext';
 import { 
@@ -9,8 +10,8 @@ import {
     LockClosedIcon,
     ChevronDownIcon,
     ChevronUpIcon
-} from './icons/EliteIcons';
-import Button from './ui/Button';
+} from './icons/EliteIcons.tsx';
+import Button from './ui/Button.tsx';
 
 const tierLevels: Record<CircleMember['tier'], number> = {
     'Elit Access': 1,

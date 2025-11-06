@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { CloseIcon } from './icons/EliteIcons';
 import Button from './ui/Button';
 import { useLocalization } from '../localization/LocalizationContext';
-import { User } from '../App';
+// FIX: Corrected import path for User type from App.tsx to ensure module resolution.
+import { User } from '../App.tsx';
 
 interface PrivacyAgreementModalProps {
     user: User;

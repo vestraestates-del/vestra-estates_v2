@@ -5,7 +5,8 @@ import BrandingForm from '../BrandingForm';
 import Button from '../../ui/Button';
 import { initialLogs, LogEntry } from '../../../data/adminData';
 import { SearchIcon } from '../../icons/EliteIcons';
-import { BackgroundImages } from '../../../App';
+// FIX: Corrected import path for BackgroundImages type from App.tsx to ensure module resolution.
+import { BackgroundImages } from '../../../App.tsx';
 
 interface SystemSettingsProps {
     onSave: (logo: LogoConfig, bgs: BackgroundImages) => void;
@@ -114,7 +115,29 @@ const SystemSettings: React.FC<SystemSettingsProps> = ({ onSave, currentLogo, cu
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <BrandingForm onSave={onSave} currentLogo={currentLogo} currentBgs={currentBgs} />
                 <WidgetCard title="Multi-Language Settings">
-                    {/* Language settings content... */}
+                    <div className="space-y-4">
+                        {languageSettings.map(lang => (
+                            <div key={lang.code} className="flex items-center justify-between p-2 bg-white/5 rounded">
+                                <span>{lang.flag} {lang.name}</span>
+                                <div className="flex items-center gap-4">
+                                    <Button 
+                                        size="sm"
+                                        variant="secondary"
+                                        disabled={lang.code === defaultLanguage} 
+                                        onClick={() => handleSetDefault(lang.code)} 
+                                        className={`${defaultLanguage === lang.code ? 'bg-cyan-500 text-white cursor-not-allowed' : 'bg-gray-700 hover:bg-gray-600'}`}
+                                    >
+                                        {defaultLanguage === lang.code ? 'Default' : 'Set Default'}
+                                    </Button>
+                                    <label className="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" checked={lang.enabled} onChange={() => handleToggleLanguage(lang.code)} className="sr-only peer" />
+                                        <div className="w-9 h-5 bg-gray-600 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-500"></div>
+                                    </label>
+                                </div>
+                            </div>
+                        ))}
+                        <Button size="sm" onClick={handleSaveLanguages} className="mt-4">Save Language Settings</Button>
+                    </div>
                 </WidgetCard>
                 <div className="md:col-span-2">
                     <WidgetCard title="Logging System">

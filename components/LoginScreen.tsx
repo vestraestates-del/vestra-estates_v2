@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { VestraLogo, LogoConfig } from './icons/VestraLogo.tsx';
+// FIX: Updated import paths to be relative and include file extensions to ensure module resolution.
 import { User } from '../App.tsx';
 import Button from './ui/Button.tsx';
+import { MockUser } from '../data/userData.ts';
 
 interface LoginScreenProps {
   slogan: string;
@@ -9,7 +11,7 @@ interface LoginScreenProps {
   onShowTiers: () => void;
   logoConfig: LogoConfig;
   backgroundImage: string;
-  mockUsers: { [key: string]: User };
+  mockUsers: { [key: string]: MockUser };
 }
 
 const LoginScreen: React.FC<LoginScreenProps> = ({ slogan, onLogin, onShowTiers, logoConfig, backgroundImage, mockUsers }) => {
@@ -21,9 +23,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ slogan, onLogin, onShowTiers,
         e.preventDefault();
         const user = mockUsers[email.toLowerCase()];
 
-        // In a real app, password would be hashed and checked on a server.
-        // This is a simple mock for demonstration. 'password' is the valid pass for all users.
-        if (user && password === 'password') {
+        if (user && password === user.password) {
             onLogin(user, email.toLowerCase());
         } else {
             setError('Invalid credentials. Please try again.');
@@ -69,7 +69,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ slogan, onLogin, onShowTiers,
                                 autoComplete="current-password"
                                 required
                                 className="w-full rounded-md border border-gray-700 bg-gray-900/50 px-3 py-2 text-white placeholder-gray-500 focus:border-cyan-500 focus:outline-none focus:ring-cyan-500 sm:text-sm"
-                                placeholder="Password (e.g., password)"
+                                placeholder="Password"
                             />
                         </div>
                     </div>

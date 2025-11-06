@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLocalization } from '../localization/LocalizationContext.tsx';
 import { KeyIcon, DocumentTextIcon, ConciergeBellIcon, EyeIcon, UsersGroupIcon, MessageIcon } from './icons/EliteIcons.tsx';
+// FIX: Corrected import path for User type from App.tsx to ensure module resolution.
 import type { User } from '../App.tsx';
 import type { CircleMember } from '../data/circleData.ts';
 
