@@ -1,4 +1,5 @@
 
+
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { CloseIcon, SendIcon, MicrophoneIcon, StopCircleIcon } from './icons/EliteIcons.tsx';
 import type { PortfolioItem } from '../data/portfolioData.ts';
@@ -41,12 +42,10 @@ const ChatController: React.FC<ChatControllerProps> = (props) => {
     // --- Voice Input State ---
     const [isRecording, setIsRecording] = useState(false);
     const [speechSupported, setSpeechSupported] = useState(false);
-    // FIX: Use 'any' type for SpeechRecognition to resolve browser-specific API type errors.
     const recognitionRef = useRef<any | null>(null);
     const baseTextRef = useRef('');
 
     const siteContext = useMemo(() => {
-        // FIX: Derive service categories from the imported `lifestyleServices` and translate them for the AI context.
         const allServices = lifestyleServices.map(s => ({
             id: s.id,
             title: t(s.titleKey),
@@ -137,7 +136,6 @@ ${JSON.stringify(siteContext, null, 2)}
     
     // --- Speech Recognition Setup ---
     useEffect(() => {
-        // FIX: Use type assertion to 'any' to access browser-specific SpeechRecognition APIs.
         const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
         if (SpeechRecognition) {
             setSpeechSupported(true);
@@ -151,7 +149,6 @@ ${JSON.stringify(siteContext, null, 2)}
             };
             recognition.lang = langMap[language] || 'en-US';
 
-            // FIX: Use 'any' for the event type to handle SpeechRecognitionEvent properties.
             recognition.onresult = (event: any) => {
                 let interimTranscript = '';
                 let finalTranscript = '';

@@ -1,13 +1,5 @@
-
+// This file is a duplicate and is obsolete. The correct implementation exists in `components/CirclePage.tsx`.
+// It is kept to prevent breaking imports but should not be used.
 import React from 'react';
-
-const CirclePage: React.FC = () => {
-  return (
-    <div>
-      {/* This is a placeholder for a potentially unused file to resolve a build error. */}
-      <h1>Circle Page</h1>
-    </div>
-  );
-};
-
+const CirclePage: React.FC = () => null;
 export default CirclePage;

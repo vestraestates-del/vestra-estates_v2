@@ -1,7 +1,6 @@
 import React from 'react';
 
-// This component is obsolete and has been replaced by AssetManagementPage.
-// Its content has been removed to resolve critical dependency conflicts that were crashing the application.
+// This component is obsolete and has been replaced by AssetManagementPage.tsx.
+// It is kept to prevent breaking imports but should not be used.
 const PortfolioPage: React.FC = () => null;
-
 export default PortfolioPage;

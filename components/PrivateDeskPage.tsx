@@ -1,7 +1,6 @@
 import React from 'react';
-import { useLocalization } from '../localization/LocalizationContext';
-import { KeyIcon, DocumentTextIcon, ConciergeBellIcon, EyeIcon, UsersGroupIcon, MessageIcon } from './icons/EliteIcons';
-// FIX: The `CircleMember` type is not exported from `App.tsx`. It is now correctly imported from `../data/circleData.ts`.
+import { useLocalization } from '../localization/LocalizationContext.tsx';
+import { KeyIcon, DocumentTextIcon, ConciergeBellIcon, EyeIcon, UsersGroupIcon, MessageIcon } from './icons/EliteIcons.tsx';
 import type { User } from '../App.tsx';
 import type { CircleMember } from '../data/circleData.ts';
 

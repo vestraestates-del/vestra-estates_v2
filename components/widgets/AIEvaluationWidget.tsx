@@ -66,7 +66,7 @@ const AIEvaluationWidget: React.FC<AIEvaluationWidgetProps> = ({ property }) => 
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ prompt }),
+          body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: prompt }] }] }),
         });
 
         if (!response.ok) {
