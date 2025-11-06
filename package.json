@@ -5,6 +5,9 @@
   "scripts": {
     "build": "mkdir -p dist && cp index.html dist/ && esbuild index.tsx --bundle --outfile=dist/index.js --jsx=automatic --loader:.ts=tsx --define:process.env.NODE_ENV='\"production\"' --external:react --external:react-dom --external:react-dom/client --external:react/jsx-runtime --external:recharts --external:leaflet --external:react-leaflet"
   },
+  "dependencies": {
+    "@google/genai": "^0.13.0"
+  },
   "devDependencies": {
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
