@@ -56,7 +56,7 @@ const NdaModal: React.FC<NdaModalProps> = ({ property, onConfirm, onClose }) => 
                   headers: {
                     'Content-Type': 'application/json',
                   },
-                  body: JSON.stringify({ prompt }),
+                  body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: prompt }] }] }),
                 });
 
                 if (!response.ok) {

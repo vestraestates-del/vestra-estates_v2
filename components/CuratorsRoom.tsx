@@ -1,6 +1,3 @@
-
-
-
 import React, { useState } from 'react';
 import { ArtItem } from '../data/artData.ts';
 import { WatchItem } from '../data/watchesData.ts';
@@ -27,7 +24,6 @@ const ArtCard: React.FC<{ item: ArtItem }> = ({ item }) => (
         <h3 className="font-semibold text-white">{item.title}</h3>
         <p className="text-sm text-cyan-400">{item.artist}, {item.year}</p>
         <p className="text-xs text-gray-400 mt-1">{item.medium}</p>
-        {/* FIX: Add description to ArtCard for consistency with other asset cards. */}
         <p className="text-sm text-gray-300 mt-2 h-10 overflow-hidden">{item.description}</p>
         <p className="text-sm font-bold text-gray-200 mt-2">{item.value}</p>
     </div>

@@ -1,17 +1,23 @@
 import React, { useState, lazy, Suspense } from 'react';
-import WidgetCard from '../../ui/WidgetCard';
-import Button from '../../ui/Button';
-import { initialBlogPosts, BlogPost } from '../../../data/blogData';
-import { initialMenuItems, MenuItem } from '../../../data/adminData';
-import { EditIcon, TrashIcon, PlusCircleIcon } from '../../icons/EliteIcons';
+import WidgetCard from '../../ui/WidgetCard.tsx';
+import Button from '../../ui/Button.tsx';
+import { initialBlogPosts, BlogPost } from '../../../data/blogData.ts';
+import { initialMenuItems, MenuItem } from '../../../data/adminData.ts';
+import { EditIcon, TrashIcon, PlusCircleIcon } from '../../icons/EliteIcons.tsx';
 
-const BlogEditorModal = lazy(() => import('./BlogEditorModal'));
-const MenuEditorModal = lazy(() => import('./MenuEditorModal'));
+const BlogEditorModal = lazy(() => import('./BlogEditorModal.tsx'));
+const MenuEditorModal = lazy(() => import('./MenuEditorModal.tsx'));
 
-const Cms: React.FC = () => {
-    const [slogan, setSlogan] = useState("Ultra-Luxury Real Estate for the World's Top 0.1%.");
-    const [siteTitle, setSiteTitle] = useState("VESTRA ESTATES");
-    const [metaDescription, setMetaDescription] = useState("An exclusive, AI-powered digital concierge for ultra-luxury real estate.");
+interface CmsProps {
+    siteContent: { slogan: string; siteTitle: string; metaDescription: string; };
+    onSave: (content: { slogan: string; siteTitle: string; metaDescription: string; }) => void;
+}
+
+
+const Cms: React.FC<CmsProps> = ({ siteContent, onSave }) => {
+    const [slogan, setSlogan] = useState(siteContent.slogan);
+    const [siteTitle, setSiteTitle] = useState(siteContent.siteTitle);
+    const [metaDescription, setMetaDescription] = useState(siteContent.metaDescription);
 
     const [posts, setPosts] = useState<BlogPost[]>(initialBlogPosts);
     const [editingPost, setEditingPost] = useState<Partial<BlogPost> | null>(null);
@@ -23,7 +29,10 @@ const Cms: React.FC = () => {
     const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
     const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
-    const handleSave = (section: string) => {
+    const handleSave = (section: 'Landing Page' | 'SEO') => {
+        if (section === 'Landing Page' || section === 'SEO') {
+            onSave({ slogan, siteTitle, metaDescription });
+        }
         alert(`${section} settings have been saved.`);
     };
 

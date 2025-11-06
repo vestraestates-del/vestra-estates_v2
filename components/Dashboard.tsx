@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import PortfolioWidget from './widgets/PortfolioWidget.tsx';
 import PropertyValueWidget from './widgets/PropertyValueWidget.tsx';
@@ -6,7 +7,6 @@ import AgendaWidget from './widgets/AgendaWidget.tsx';
 import RequestsWidget from './widgets/RequestsWidget.tsx';
 import AIEvaluationWidget from './widgets/AIEvaluationWidget.tsx';
 import CollectionFlowWidget from './widgets/CollectionFlowWidget.tsx';
-import PromotionsBanner from './PromotionsBanner.tsx';
 import type { PortfolioItem } from '../data/portfolioData.ts';
 import type { AgendaItem, RequestItem } from '../data/appData.ts';
 import { useLocalization } from '../localization/LocalizationContext.tsx';
@@ -27,22 +27,13 @@ interface DashboardProps {
 const Dashboard: React.FC<DashboardProps> = (props) => {
   const { t } = useLocalization();
   const [selectedProperty, setSelectedProperty] = useState<PortfolioItem | null>(props.portfolioItems[0] || null);
-  const [showBanner, setShowBanner] = useState(true);
-
+  
   return (
     <div className="p-4 md:p-8 h-full overflow-y-auto">
       <header className="mb-8">
         <h1 className="text-3xl font-bold text-white">{t('sidebar.dashboard')}</h1>
         <p className="text-gray-400">Welcome to your secure client portal.</p>
       </header>
-
-      {showBanner && (
-        <PromotionsBanner 
-          title="Exclusive Opportunity: The Athena District"
-          description="A new joint venture opportunity is available for co-investment in NEOM. View the prospectus in the Joint Ventures section."
-          onDismiss={() => setShowBanner(false)}
-        />
-      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Column */}

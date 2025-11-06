@@ -50,7 +50,7 @@ const GenerationalWealthPage: React.FC<GenerationalWealthPageProps> = ({ onAddRe
             const response = await fetch('/api/generate', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ prompt }),
+              body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: prompt }] }] }),
             });
 
             if (!response.ok) {

@@ -1,167 +1,123 @@
 import React, { useState, useMemo } from 'react';
-import WidgetCard from '../../ui/WidgetCard';
-import Button from '../../ui/Button';
-import { initialPortfolioItems, PortfolioItem } from '../../../data/portfolioData';
-import { initialOffMarketProperties, OffMarketProperty } from '../../../data/offMarketData';
-import { initialArtCollection, ArtItem } from '../../../data/artData';
-import { initialWatches, WatchItem } from '../../../data/watchesData';
-import { initialAutomobiles, AutomobileItem } from '../../../data/automobilesData';
-import { initialJewels, JewelItem } from '../../../data/jewelsData';
-import { initialWines, WineItem } from '../../../data/winesData';
-import { PlusCircleIcon, CloseIcon } from '../../icons/EliteIcons';
+import WidgetCard from '../../ui/WidgetCard.tsx';
+import Button from '../../ui/Button.tsx';
+import { PortfolioItem } from '../../../data/portfolioData.ts';
+import { OffMarketProperty } from '../../../data/offMarketData.ts';
+import { ArtItem } from '../../../data/artData.ts';
+import { WatchItem } from '../../../data/watchesData.ts';
+import { AutomobileItem } from '../../../data/automobilesData.ts';
+import { JewelItem } from '../../../data/jewelsData.ts';
+import { WineItem } from '../../../data/winesData.ts';
+import { PlusCircleIcon } from '../../icons/EliteIcons.tsx';
+import AdminFormModal from '../../AdminFormModal.tsx';
+import ConfirmationModal from '../../ConfirmationModal.tsx';
 
+// Type definitions for assets
 type CuratedAsset = (ArtItem & { assetType: 'Art' }) | (WatchItem & { assetType: 'Watch' }) | (AutomobileItem & { assetType: 'Automobile' }) | (JewelItem & { assetType: 'Jewel' }) | (WineItem & { assetType: 'Wine' });
 type AnyAsset = PortfolioItem | OffMarketProperty | CuratedAsset;
 type AssetType = 'featured' | 'off-market' | 'curated';
 
-const AssetEditorModal: React.FC<{
-    asset: AnyAsset | null;
-    assetType: AssetType;
-    onClose: () => void;
-    onSave: (asset: AnyAsset) => void;
-}> = ({ asset, assetType, onClose, onSave }) => {
-    const [editedAsset, setEditedAsset] = useState<Partial<AnyAsset>>(asset || {});
+// Props for the main component
+interface PropertyManagementProps {
+    portfolioItems: PortfolioItem[];
+    setPortfolioItems: React.Dispatch<React.SetStateAction<PortfolioItem[]>>;
+    offMarketProperties: OffMarketProperty[];
+    setOffMarketProperties: React.Dispatch<React.SetStateAction<OffMarketProperty[]>>;
+    artCollection: ArtItem[];
+    setArtCollection: React.Dispatch<React.SetStateAction<ArtItem[]>>;
+    watchCollection: WatchItem[];
+    setWatchCollection: React.Dispatch<React.SetStateAction<WatchItem[]>>;
+    automobileCollection: AutomobileItem[];
+    setAutomobileCollection: React.Dispatch<React.SetStateAction<AutomobileItem[]>>;
+    jewelCollection: JewelItem[];
+    setJewelCollection: React.Dispatch<React.SetStateAction<JewelItem[]>>;
+    wineCollection: WineItem[];
+    setWineCollection: React.Dispatch<React.SetStateAction<WineItem[]>>;
+}
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        setEditedAsset(prev => ({ ...prev, [name]: value }));
-    };
-
-    const handleMediaChange = (field: 'gallery' | 'videos', newMedia: string[]) => {
-        setEditedAsset(prev => ({ ...prev, [field]: newMedia }));
-    };
-    
-    const handleSave = () => {
-        onSave({ id: Date.now(), ...asset, ...editedAsset } as AnyAsset);
-    };
-
-    const renderCommonFields = () => (
-        <>
-            <div>
-                <label className="text-sm text-gray-400">Title / Name / Codename</label>
-                <input type="text" name={('codename' in editedAsset) ? 'codename' : ('name' in editedAsset) ? 'name' : 'title'} value={(editedAsset as any).title || (editedAsset as any).name || (editedAsset as any).codename || ''} onChange={handleChange} className="w-full bg-gray-900 border-gray-700 rounded p-2" />
-            </div>
-            <div>
-                <label className="text-sm text-gray-400">Value / Price Range</label>
-                <input type="text" name={('value' in editedAsset) ? 'value' : 'priceRange'} value={(editedAsset as any).value || (editedAsset as any).priceRange || ''} onChange={handleChange} className="w-full bg-gray-900 border-gray-700 rounded p-2" />
-            </div>
-        </>
-    );
-
-    const renderMediaManager = () => {
-        const gallery = (editedAsset as PortfolioItem)?.gallery || [];
-        const videos = (editedAsset as PortfolioItem)?.videos || [];
-
-        const addMedia = (type: 'image' | 'video') => {
-            const url = prompt(`Enter new ${type} URL:`);
-            if (url) {
-                if (type === 'image') handleMediaChange('gallery', [...gallery, url]);
-                if (type === 'video') handleMediaChange('videos', [...videos, url]);
-            }
-        };
-
-        const removeMedia = (type: 'image' | 'video', index: number) => {
-            if (type === 'image') handleMediaChange('gallery', gallery.filter((_, i) => i !== index));
-            if (type === 'video') handleMediaChange('videos', videos.filter((_, i) => i !== index));
-        };
-        
-        return (
-            <div>
-                <h3 className="text-lg font-semibold text-white mb-2">Media Management</h3>
-                <div className="grid grid-cols-3 gap-2">
-                    {gallery.map((url, i) => <div key={i} className="relative group"><img src={url} className="w-full h-24 object-cover rounded" /><button onClick={() => removeMedia('image', i)} className="absolute top-1 right-1 bg-red-600/80 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100"><CloseIcon className="w-3 h-3"/></button></div>)}
-                    {videos.map((url, i) => <div key={i} className="relative group"><video src={url} className="w-full h-24 object-cover rounded bg-black" /><button onClick={() => removeMedia('video', i)} className="absolute top-1 right-1 bg-red-600/80 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100"><CloseIcon className="w-3 h-3"/></button></div>)}
-                </div>
-                <div className="flex gap-2 mt-2">
-                    <Button size="sm" variant="ghost" onClick={() => addMedia('image')}>Add Image URL</Button>
-                    <Button size="sm" variant="ghost" onClick={() => addMedia('video')}>Add Video URL</Button>
-                </div>
-            </div>
-        )
-    }
-
-    const renderSpecificFields = () => {
-        if (assetType === 'featured') {
-            const prop = editedAsset as Partial<PortfolioItem>;
-            return <>
-                <div><label className="text-sm text-gray-400">Location Key</label><input type="text" name="locationKey" value={prop.locationKey || ''} onChange={handleChange} className="w-full bg-gray-900 border-gray-700 rounded p-2" /></div>
-                <div><label className="text-sm text-gray-400">Description Key</label><textarea name="descriptionKey" value={prop.descriptionKey || ''} onChange={handleChange} className="w-full h-24 bg-gray-900 border-gray-700 rounded p-2"></textarea></div>
-                {renderMediaManager()}
-            </>
-        }
-        if (assetType === 'off-market') {
-            const prop = editedAsset as Partial<OffMarketProperty>;
-            return <>
-                <div><label className="text-sm text-gray-400">Location</label><input type="text" name="location" value={prop.location || ''} onChange={handleChange} className="w-full bg-gray-900 border-gray-700 rounded p-2" /></div>
-                <div><label className="text-sm text-gray-400">Teaser</label><textarea name="teaser" value={prop.teaser || ''} onChange={handleChange} className="w-full h-24 bg-gray-900 border-gray-700 rounded p-2"></textarea></div>
-                <div><label className="text-sm text-gray-400">Investment Score</label><input type="number" name="investmentScore" value={prop.investmentScore || 0} onChange={handleChange} className="w-full bg-gray-900 border-gray-700 rounded p-2" /></div>
-                {renderMediaManager()}
-            </>
-        }
-        if (assetType === 'curated') {
-             const item = editedAsset as Partial<CuratedAsset>;
-             return <>
-                <div><label className="text-sm text-gray-400">Artist / Brand / Make</label><input type="text" name={(item as any).artist ? 'artist' : (item as any).brand ? 'brand' : 'make'} value={(item as any).artist || (item as any).brand || (item as any).make || ''} onChange={handleChange} className="w-full bg-gray-900 border-gray-700 rounded p-2" /></div>
-                <div><label className="text-sm text-gray-400">Description</label><textarea name="description" value={item.description || ''} onChange={handleChange} className="w-full h-24 bg-gray-900 border-gray-700 rounded p-2"></textarea></div>
-             </>
-        }
-        return null;
-    }
-
-    return (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-lg z-50 flex items-center justify-center" onClick={onClose}>
-            <div className="bg-[#0c0c10] border border-gray-800 rounded-2xl shadow-2xl w-full max-w-3xl flex flex-col h-[90vh]" onClick={e => e.stopPropagation()}>
-                <div className="p-4 border-b border-gray-800"><h2 className="text-xl font-bold text-white">{asset ? 'Edit' : 'Add'} Asset</h2></div>
-                <div className="p-6 space-y-4 overflow-y-auto">
-                    <div className="grid grid-cols-2 gap-4">
-                        {renderCommonFields()}
-                    </div>
-                    {renderSpecificFields()}
-                </div>
-                <div className="p-4 border-t border-gray-800 flex justify-end gap-2"><Button variant="secondary" onClick={onClose}>Cancel</Button><Button onClick={handleSave}>Save Asset</Button></div>
-            </div>
-        </div>
-    );
-};
-
-
-const PropertyManagement: React.FC = () => {
+const PropertyManagement: React.FC<PropertyManagementProps> = (props) => {
     const [activeTab, setActiveTab] = useState<AssetType>('featured');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingAsset, setEditingAsset] = useState<AnyAsset | null>(null);
+    const [confirmDelete, setConfirmDelete] = useState<AnyAsset | null>(null);
 
-    const [featuredEstates, setFeaturedEstates] = useState(initialPortfolioItems);
-    const [offMarketProperties, setOffMarketProperties] = useState(initialOffMarketProperties);
-    
     const curatedAssets = useMemo(() => [
-        ...initialArtCollection.map(a => ({...a, assetType: 'Art' as const})),
-        ...initialWatches.map(w => ({...w, assetType: 'Watch' as const})),
-        ...initialAutomobiles.map(a => ({...a, assetType: 'Automobile' as const})),
-        ...initialJewels.map(j => ({...j, assetType: 'Jewel' as const})),
-        ...initialWines.map(w => ({...w, assetType: 'Wine' as const})),
-    ], []);
-    const [curated, setCurated] = useState<CuratedAsset[]>(curatedAssets);
+        ...props.artCollection.map(a => ({...a, assetType: 'Art' as const})),
+        ...props.watchCollection.map(w => ({...w, assetType: 'Watch' as const})),
+        ...props.automobileCollection.map(a => ({...a, assetType: 'Automobile' as const})),
+        ...props.jewelCollection.map(j => ({...j, assetType: 'Jewel' as const})),
+        ...props.wineCollection.map(w => ({...w, assetType: 'Wine' as const})),
+    ], [props.artCollection, props.watchCollection, props.automobileCollection, props.jewelCollection, props.wineCollection]);
 
     const handleOpenModal = (asset?: AnyAsset) => {
         setEditingAsset(asset || null);
         setIsModalOpen(true);
     };
 
-    const handleSave = (savedAsset: AnyAsset) => {
+    const handleSave = (savedAsset: Record<string, any>) => {
+        const id = savedAsset.id || Date.now();
+        const assetToSave = { ...savedAsset, id };
+
         switch (activeTab) {
             case 'featured':
-                setFeaturedEstates(prev => savedAsset.id ? prev.map(p => p.id === savedAsset.id ? savedAsset as PortfolioItem : p) : [...prev, savedAsset as PortfolioItem]);
+                props.setPortfolioItems(prev => 
+                    prev.some(p => p.id === id) 
+                        ? prev.map(p => p.id === id ? assetToSave as PortfolioItem : p) 
+                        : [...prev, assetToSave as PortfolioItem]
+                );
                 break;
             case 'off-market':
-                 setOffMarketProperties(prev => savedAsset.id ? prev.map(p => p.id === savedAsset.id ? savedAsset as OffMarketProperty : p) : [...prev, savedAsset as OffMarketProperty]);
+                 props.setOffMarketProperties(prev => 
+                    prev.some(p => p.id === id) 
+                        ? prev.map(p => p.id === id ? assetToSave as OffMarketProperty : p) 
+                        : [...prev, assetToSave as OffMarketProperty]
+                );
                 break;
             case 'curated':
-                 setCurated(prev => savedAsset.id ? prev.map(p => p.id === savedAsset.id ? savedAsset as CuratedAsset : p) : [...prev, savedAsset as CuratedAsset]);
+                const curatedType = (assetToSave as CuratedAsset).assetType;
+                const updateCollection = (setter: Function, type: string) => {
+                    setter((prev: any[]) => 
+                        prev.some(p => p.id === id)
+                            ? prev.map(p => p.id === id ? assetToSave : p)
+                            : [...prev, assetToSave]
+                    );
+                };
+                if (curatedType === 'Art') updateCollection(props.setArtCollection, 'Art');
+                else if (curatedType === 'Watch') updateCollection(props.setWatchCollection, 'Watch');
+                else if (curatedType === 'Automobile') updateCollection(props.setAutomobileCollection, 'Automobile');
+                else if (curatedType === 'Jewel') updateCollection(props.setJewelCollection, 'Jewel');
+                else if (curatedType === 'Wine') updateCollection(props.setWineCollection, 'Wine');
                 break;
         }
         setIsModalOpen(false);
     };
     
+    const handleDelete = () => {
+        if (!confirmDelete) return;
+        const id = confirmDelete.id;
+        switch (activeTab) {
+            case 'featured': props.setPortfolioItems(prev => prev.filter(p => p.id !== id)); break;
+            case 'off-market': props.setOffMarketProperties(prev => prev.filter(p => p.id !== id)); break;
+            case 'curated':
+                const assetType = (confirmDelete as CuratedAsset).assetType;
+                if (assetType === 'Art') props.setArtCollection(prev => prev.filter(p => p.id !== id));
+                if (assetType === 'Watch') props.setWatchCollection(prev => prev.filter(p => p.id !== id));
+                if (assetType === 'Automobile') props.setAutomobileCollection(prev => prev.filter(p => p.id !== id));
+                if (assetType === 'Jewel') props.setJewelCollection(prev => prev.filter(p => p.id !== id));
+                if (assetType === 'Wine') props.setWineCollection(prev => prev.filter(p => p.id !== id));
+                break;
+        }
+        setConfirmDelete(null);
+    };
+
+    const getEmptyAsset = (): Record<string, any> => {
+        switch (activeTab) {
+            case 'featured': return { nameKey: '', locationKey: '', value: '$0M', image: '', descriptionKey: '', featureKeys: '', bedrooms: 0, bathrooms: 0, gallery: [], videos: [], lat: 0, lon: 0 };
+            case 'off-market': return { codename: '', location: '', country: '', teaser: '', image: '', category: 'Villa', stats: [], gallery: [], securityGrade: 'A', smartHomeGrade: 'A', architecturalStyle: '', investmentScore: 0, lifestyleScore: 0 };
+            case 'curated': return { title: '', artist: '', year: '', medium: '', value: '', image: '', description: '', assetType: 'Art' }; // Default to Art
+        }
+    };
+
     const tabs: { id: AssetType, name: string }[] = [
         { id: 'featured', name: 'Featured Estates' },
         { id: 'off-market', name: 'Off-Market' },
@@ -169,33 +125,66 @@ const PropertyManagement: React.FC = () => {
     ];
 
     const renderCurrentTab = () => {
+        let items: AnyAsset[] = [];
+        let columns: string[] = [];
+        
         switch(activeTab) {
-            case 'featured': return (
-                <table className="w-full text-sm text-left text-gray-400">
-                    <thead className="text-xs uppercase bg-white/5"><tr><th className="px-6 py-3">Title</th><th className="px-6 py-3">Location Key</th><th className="px-6 py-3">Value</th><th className="px-6 py-3">Actions</th></tr></thead>
-                    <tbody>{featuredEstates.map(prop => (<tr key={prop.id} className="border-b border-gray-800 hover:bg-white/5"><td className="px-6 py-4 font-medium text-white">{prop.nameKey}</td><td className="px-6 py-4">{prop.locationKey}</td><td className="px-6 py-4">{prop.value}</td><td className="px-6 py-4"><Button size="sm" onClick={() => handleOpenModal(prop)}>Edit</Button></td></tr>))}</tbody>
-                </table>
-            );
-            case 'off-market': return (
-                 <table className="w-full text-sm text-left text-gray-400">
-                    <thead className="text-xs uppercase bg-white/5"><tr><th className="px-6 py-3">Codename</th><th className="px-6 py-3">Location</th><th className="px-6 py-3">Category</th><th className="px-6 py-3">Actions</th></tr></thead>
-                    <tbody>{offMarketProperties.map(prop => (<tr key={prop.id} className="border-b border-gray-800 hover:bg-white/5"><td className="px-6 py-4 font-medium text-white">{prop.codename}</td><td className="px-6 py-4">{prop.location}</td><td className="px-6 py-4">{prop.category}</td><td className="px-6 py-4"><Button size="sm" onClick={() => handleOpenModal(prop)}>Edit</Button></td></tr>))}</tbody>
-                </table>
-            );
-            case 'curated': return (
-                <table className="w-full text-sm text-left text-gray-400">
-                    <thead className="text-xs uppercase bg-white/5"><tr><th className="px-6 py-3">Name / Model</th><th className="px-6 py-3">Type</th><th className="px-6 py-3">Artist / Brand</th><th className="px-6 py-3">Value</th><th className="px-6 py-3">Actions</th></tr></thead>
-                    <tbody>{curated.map(item => (<tr key={item.id} className="border-b border-gray-800 hover:bg-white/5"><td className="px-6 py-4 font-medium text-white">{(item as any).title || (item as any).model || (item as any).name}</td><td className="px-6 py-4">{item.assetType}</td><td className="px-6 py-4">{(item as any).artist || (item as any).brand || (item as any).make}</td><td className="px-6 py-4">{item.value}</td><td className="px-6 py-4"><Button size="sm" onClick={() => handleOpenModal(item)}>Edit</Button></td></tr>))}</tbody>
-                </table>
-            );
+            case 'featured':
+                items = props.portfolioItems;
+                columns = ['Name Key', 'Location Key', 'Value'];
+                break;
+            case 'off-market':
+                items = props.offMarketProperties;
+                columns = ['Codename', 'Location', 'Category'];
+                break;
+            case 'curated':
+                items = curatedAssets;
+                columns = ['Name/Model', 'Type', 'Artist/Brand', 'Value'];
+                break;
         }
+
+        return (
+            <table className="w-full text-sm text-left text-gray-400">
+                <thead className="text-xs uppercase bg-white/5">
+                    <tr>
+                        {columns.map(col => <th key={col} className="px-6 py-3">{col}</th>)}
+                        <th className="px-6 py-3 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {items.map(item => (
+                        <tr key={item.id} className="border-b border-gray-800 hover:bg-white/5">
+                            {columns.map(col => (
+                                <td key={col} className="px-6 py-4 font-medium text-white">
+                                    {
+                                        col === 'Name Key' ? (item as PortfolioItem).nameKey :
+                                        col === 'Location Key' ? (item as PortfolioItem).locationKey :
+                                        col === 'Codename' ? (item as OffMarketProperty).codename :
+                                        col === 'Location' ? (item as OffMarketProperty).location :
+                                        col === 'Category' ? (item as OffMarketProperty).category :
+                                        col === 'Name/Model' ? (item as any).title || (item as any).model || (item as any).name :
+                                        col === 'Type' ? (item as CuratedAsset).assetType :
+                                        col === 'Artist/Brand' ? (item as any).artist || (item as any).brand || (item as any).make :
+                                        (item as any).value
+                                    }
+                                </td>
+                            ))}
+                            <td className="px-6 py-4 text-right">
+                                <Button size="sm" variant="secondary" onClick={() => handleOpenModal(item)} className="mr-2">Edit</Button>
+                                <Button size="sm" variant="ghost" className="hover:bg-red-500/10 text-red-400" onClick={() => setConfirmDelete(item)}>Delete</Button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        );
     }
 
     return (
         <div>
             <header className="mb-8 flex justify-between items-center">
                 <div><h1 className="text-3xl font-bold text-white">Asset Management</h1><p className="text-gray-400">Manage all platform listings.</p></div>
-                <Button onClick={() => handleOpenModal()} className="flex items-center gap-2"><PlusCircleIcon className="w-5 h-5"/> Add New Asset</Button>
+                <Button onClick={() => handleOpenModal(getEmptyAsset() as AnyAsset)} className="flex items-center gap-2"><PlusCircleIcon className="w-5 h-5"/> Add New Asset</Button>
             </header>
             
              <div className="flex border-b border-gray-800 mb-4">
@@ -215,7 +204,8 @@ const PropertyManagement: React.FC = () => {
                    {renderCurrentTab()}
                 </div>
             </WidgetCard>
-            {isModalOpen && <AssetEditorModal asset={editingAsset} assetType={activeTab} onClose={() => setIsModalOpen(false)} onSave={handleSave} />}
+            {isModalOpen && <AdminFormModal item={editingAsset || getEmptyAsset()} onSave={handleSave} onClose={() => setIsModalOpen(false)} title={editingAsset ? 'Edit Asset' : `Add New ${activeTab} Asset`} />}
+            {confirmDelete && <ConfirmationModal title="Confirm Deletion" message={`Are you sure you want to delete this asset? This action cannot be undone.`} onConfirm={handleDelete} onClose={() => setConfirmDelete(null)} confirmText="Delete Asset" />}
         </div>
     );
 };

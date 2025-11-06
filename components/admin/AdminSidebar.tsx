@@ -1,6 +1,6 @@
 import React from 'react';
-import * as Icons from '../icons/EliteIcons';
-import { AdminSection } from '../AdminPage';
+import * as Icons from '../icons/EliteIcons.tsx';
+import { AdminSection } from './AdminPage.tsx';
 
 interface AdminSidebarProps {
     activeSection: AdminSection;

@@ -15,40 +15,34 @@ export default async function handler(req, res) {
 
   const API_KEY = process.env.API_KEY;
   if (!API_KEY) {
-    console.error('API_KEY environment variable is not set.');
-    return res.status(500).json({ error: 'API key is not configured on the server.' });
+    console.error('API_KEY environment variable is not set on the server.');
+    return res.status(500).json({ error: 'API key is not configured.' });
   }
 
   try {
     const ai = new GoogleGenAI({ apiKey: API_KEY });
 
-    // Standardize the request payload for Gemini
     const requestPayload = {
       model: 'gemini-2.5-flash',
-      // If `contents` is provided, use it. Otherwise, construct it from `prompt`.
       contents: contents || [{ role: 'user', parts: [{ text: prompt }] }],
-      // Conditionally add the system instruction to the config if it exists.
       ...(systemInstruction && { config: { systemInstruction } })
     };
     
     const response = await ai.models.generateContent(requestPayload);
     
+    // The .text getter is the most reliable way to get the text output.
     const text = response.text;
-
-    if (text === undefined) {
-      console.error('No text found in Gemini API response:', response);
-      // It's better to send the raw response for debugging if text is missing.
-      return res.status(500).json({ 
-          error: 'Failed to extract text from AI response.',
-          details: response // Sending full response might give clues.
-      });
+    
+    // It's good practice to check if the text is empty, as it could indicate a safety block or other issue.
+    if (!text) {
+        console.warn('Gemini API returned an empty text response.', { response });
+        return res.status(200).json({ text: "I am unable to provide a response at this time." });
     }
 
     res.status(200).json({ text });
 
   } catch (error) {
-    console.error('Error in API function:', error);
-    // Provide a more structured error response
+    console.error('Error calling Google GenAI:', error);
     res.status(500).json({ 
         error: 'An internal server error occurred while contacting the AI service.',
         details: error.message 

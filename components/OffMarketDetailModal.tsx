@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { OffMarketProperty } from '../data/offMarketData';
-import { useLocalization } from '../localization/LocalizationContext';
+import { OffMarketProperty } from '../data/offMarketData.ts';
+import { useLocalization } from '../localization/LocalizationContext.tsx';
 import { 
     CloseIcon, BriefcaseIcon, ShieldCheckIcon, TrendingUpIcon, PlayCircleIcon, 
     PlayIcon, PauseIcon, VolumeMuteIcon, VolumeLowIcon, VolumeHighIcon, 
     MaximizeIcon, MinimizeIcon, ThreeDIcon, ClockIcon, DocumentArrowDownIcon,
     KeyIcon, BookOpenIcon
-} from './icons/EliteIcons';
-import Button from './ui/Button';
+} from './icons/EliteIcons.tsx';
+import Button from './ui/Button.tsx';
 
 interface OffMarketDetailModalProps {
   property: OffMarketProperty;
@@ -111,7 +111,7 @@ const OffMarketDetailModal: React.FC<OffMarketDetailModalProps> = ({ property, o
                 const response = await fetch('/api/generate', {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ prompt }),
+                  body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: prompt }] }] }),
                 });
 
                 if (!response.ok) {

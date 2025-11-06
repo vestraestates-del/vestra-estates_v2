@@ -1,7 +1,8 @@
 
+
 import React, { useState, useEffect } from 'react';
-import { CloseIcon } from './icons/EliteIcons';
-import Button from './ui/Button';
+import { CloseIcon } from './icons/EliteIcons.tsx';
+import Button from './ui/Button.tsx';
 
 interface AdminFormModalProps {
     item: Record<string, any> | null;
@@ -15,7 +16,19 @@ const AdminFormModal: React.FC<AdminFormModalProps> = ({ item, onSave, onClose, 
 
     useEffect(() => {
         if (item) {
-            setFormData(item);
+            // Convert arrays to newline-separated strings for text areas
+            const processedItem = Object.entries(item).reduce((acc, [key, value]) => {
+                if (Array.isArray(value) && value.every(v => typeof v === 'string')) {
+                    acc[key] = value.join('\n');
+                } else if (key === 'stats' && Array.isArray(value)) {
+                     acc[key] = value.map((obj: { label: string, value: string }) => `${obj.label}:${obj.value}`).join('\n');
+                }
+                else {
+                    acc[key] = value;
+                }
+                return acc;
+            }, {} as Record<string, any>);
+            setFormData(processedItem);
         } else {
             setFormData({}); // Reset for new item creation
         }
@@ -30,37 +43,47 @@ const AdminFormModal: React.FC<AdminFormModalProps> = ({ item, onSave, onClose, 
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        onSave(formData);
+        // Convert newline-separated strings back to arrays before saving
+        const finalData = Object.entries(formData).reduce((acc, [key, value]) => {
+            const originalValue = item ? item[key] : undefined;
+             if (typeof value === 'string' && (key === 'gallery' || key === 'videos' || key === 'featureKeys')) {
+                acc[key] = value.split('\n').filter(line => line.trim() !== '');
+            } else if (typeof value === 'string' && key === 'stats') {
+                 acc[key] = value.split('\n').filter(line => line.trim() !== '').map(line => {
+                    const [label, val] = line.split(':');
+                    return { label: label?.trim(), value: val?.trim() };
+                });
+            }
+            else {
+                acc[key] = value;
+            }
+            return acc;
+        }, {} as Record<string, any>);
+        onSave(finalData);
     };
 
     const renderField = (key: string, value: any) => {
-        if (key === 'id') return null; // Don't show ID field
+        if (key === 'id' || key === 'assetType') return null; // Don't show ID or assetType field
 
         const fieldType = typeof value;
-        const isStatsArray = (val: any) => Array.isArray(val) && val.every(v => v && typeof v.label === 'string' && typeof v.value === 'string');
-
-        if (key === 'stats' || (Array.isArray(value) && value.every(v => typeof v === 'object' && v !== null && 'label' in v && 'value' in v))) {
-            const stringValue = isStatsArray(formData[key]) 
-                ? formData[key].map((obj: { label: string, value: string }) => `${obj.label}:${obj.value}`).join('\n') 
-                : (formData[key] || '');
-
-            return (
+        
+        if (Array.isArray(item?.[key]) || key === 'featureKeys' || key === 'stats') {
+             return (
                  <div key={key}>
                     <label htmlFor={key} className="block text-sm font-medium text-gray-400 mb-1 capitalize">{key.replace(/([A-Z])/g, ' $1')}</label>
                     <textarea
                         id={key}
                         name={key}
-                        value={stringValue}
-                        onChange={(e) => setFormData(prev => ({...prev, [key]: e.target.value}))}
+                        value={formData[key] || ''}
+                        onChange={handleChange}
                         rows={4}
                         className="w-full bg-gray-900 border border-gray-700 rounded-md px-3 py-2 text-gray-300 focus:outline-none focus:ring-2 focus:ring-cyan-500 font-mono text-xs"
-                        placeholder="label:value"
+                        placeholder={key === 'stats' ? "label:value (one per line)" : "one URL per line"}
                     />
-                     <p className="text-xs text-gray-500 mt-1">Enter as key:value pairs, one per line.</p>
                 </div>
             )
         }
-
+        
         if (fieldType === 'boolean') {
             return (
                 <div key={key} className="flex items-center">
@@ -77,7 +100,7 @@ const AdminFormModal: React.FC<AdminFormModalProps> = ({ item, onSave, onClose, 
             );
         }
 
-        const isTextArea = key.toLowerCase().includes('description') || key.toLowerCase().includes('features') || key.toLowerCase().includes('teaser');
+        const isTextArea = typeof item?.[key] === 'string' && item[key].length > 100 || key.toLowerCase().includes('description') || key.toLowerCase().includes('features') || key.toLowerCase().includes('teaser');
 
         return (
             <div key={key}>
@@ -106,7 +129,7 @@ const AdminFormModal: React.FC<AdminFormModalProps> = ({ item, onSave, onClose, 
     };
 
     return (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-lg z-50 flex items-center justify-center animate-fade-in" onClick={onClose}>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-lg z-[60] flex items-center justify-center animate-fade-in" onClick={onClose}>
             <div className="bg-[#0c0c10] border border-gray-800 rounded-2xl shadow-2xl w-full max-w-lg flex flex-col" onClick={e => e.stopPropagation()}>
                 <div className="flex-shrink-0 p-4 border-b border-gray-800 flex justify-between items-center">
                     <h2 className="text-xl font-bold text-white">{title}</h2>
@@ -115,7 +138,7 @@ const AdminFormModal: React.FC<AdminFormModalProps> = ({ item, onSave, onClose, 
                     </button>
                 </div>
                 <form onSubmit={handleSubmit}>
-                    <div className="p-6 space-y-4 max-h-[60vh] overflow-y-auto">
+                    <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
                         {Object.entries(item || formData).map(([key, value]) => renderField(key, value))}
                     </div>
                     <div className="flex-shrink-0 p-4 border-t border-gray-800 flex justify-end gap-3">

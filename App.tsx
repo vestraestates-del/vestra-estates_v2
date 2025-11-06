@@ -17,7 +17,7 @@ import SuccessionPlanningPage from './components/SuccessionPlanningPage.tsx';
 import PassionAssetPage from './components/PassionAssetPage.tsx';
 import AviationYachtingPage from './components/AviationYachtingPage.tsx';
 import DigitalVaultPage from './components/DigitalVaultPage.tsx';
-import AdminPage from './components/AdminPage.tsx';
+import AdminPage from './components/admin/AdminPage.tsx';
 import ChatController from './components/ChatController.tsx';
 import MemberChatWindow from './components/MemberChatWindow.tsx';
 import PropertyDetailModal from './components/PropertyDetailModal.tsx';
@@ -109,6 +109,12 @@ const AppContent: React.FC = () => {
         fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
         textColor: '#06b6d4',
     });
+    const [siteContent, setSiteContent] = useState({
+        slogan: "Ultra-Luxury Real Estate for the World's Top 0.1%.",
+        siteTitle: "VESTRA ESTATES",
+        metaDescription: "An exclusive, AI-powered digital concierge for ultra-luxury real estate.",
+    });
+
 
     useEffect(() => {
         const getActiveBg = () => {
@@ -274,7 +280,20 @@ const AppContent: React.FC = () => {
             case 'passion-assets': return <PassionAssetPage collections={managedCollectionSummary} onInitiateService={(title) => setIsServiceRequestModalOpen(true)} />;
             case 'aviation-yachting': return <AviationYachtingPage assets={fleetAssets} onInitiateService={(title) => setIsServiceRequestModalOpen(true)} />;
             case 'digital-vault': return <DigitalVaultPage />;
-            case 'admin': return <AdminPage onBrandingChange={(logo, bgs) => { setLogoConfig(logo); setBackgroundImages(bgs); }} currentLogo={logoConfig} currentBgs={backgroundImages} />;
+            case 'admin': return <AdminPage 
+                portfolioItems={portfolioItems} setPortfolioItems={setPortfolioItems}
+                offMarketProperties={offMarketProperties} setOffMarketProperties={setOffMarketProperties}
+                artCollection={artCollection} setArtCollection={setArtCollection}
+                watchCollection={watchCollection} setWatchCollection={setWatchCollection}
+                automobileCollection={automobileCollection} setAutomobileCollection={setAutomobileCollection}
+                jewelCollection={jewelCollection} setJewelCollection={setJewelCollection}
+                wineCollection={wineCollection} setWineCollection={setWineCollection}
+                onBrandingChange={(logo, bgs) => { setLogoConfig(logo); setBackgroundImages(bgs); }} 
+                currentLogo={logoConfig} 
+                currentBgs={backgroundImages}
+                siteContent={siteContent}
+                onSiteContentSave={setSiteContent}
+            />;
             default: return <Dashboard portfolioItems={portfolioItems} onOpenPropertyDetail={setSelectedProperty} agendaItems={agendaItems} onToggleComplete={handleToggleAgenda} onSaveAgenda={handleSaveAgenda} onDeleteAgenda={handleDeleteAgenda} requestItems={requestItems} userType={user!.type} onAddRequest={handleAddRequest} onUpdateRequest={handleUpdateRequest} />;
         }
     };
@@ -284,7 +303,7 @@ const AppContent: React.FC = () => {
     }
 
     if (!user) {
-        return <LoginScreen onLogin={handleLogin} onShowTiers={() => setIsShowingTiers(true)} logoConfig={logoConfig} backgroundImage={activeBackgroundImage} mockUsers={mockUsers} />;
+        return <LoginScreen slogan={siteContent.slogan} onLogin={handleLogin} onShowTiers={() => setIsShowingTiers(true)} logoConfig={logoConfig} backgroundImage={activeBackgroundImage} mockUsers={mockUsers} />;
     }
 
     return (

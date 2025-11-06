@@ -4,6 +4,7 @@ import { User } from '../App.tsx';
 import Button from './ui/Button.tsx';
 
 interface LoginScreenProps {
+  slogan: string;
   onLogin: (user: User, email: string) => void;
   onShowTiers: () => void;
   logoConfig: LogoConfig;
@@ -11,7 +12,7 @@ interface LoginScreenProps {
   mockUsers: { [key: string]: User };
 }
 
-const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onShowTiers, logoConfig, backgroundImage, mockUsers }) => {
+const LoginScreen: React.FC<LoginScreenProps> = ({ slogan, onLogin, onShowTiers, logoConfig, backgroundImage, mockUsers }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -37,7 +38,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onShowTiers, logoCon
             <div className="w-full max-w-sm rounded-xl border border-gray-800 bg-[#111116]/60 p-8 shadow-2xl backdrop-blur-lg animate-fade-in">
                 <div className="mb-8 flex flex-col items-center text-center">
                     <VestraLogo config={logoConfig} size={logoConfig.loginSize} className="text-cyan-400" />
-                    <p className="mt-6 text-lg font-medium text-gray-200">Ultra-Luxury Real Estate for the World's Top 0.1%.</p>
+                    <p className="mt-6 text-lg font-medium text-gray-200">{slogan}</p>
                     <p className="mt-2 text-sm text-gray-400">Secure Client Portal</p>
                 </div>
 
