@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { FingerprintIcon, CheckCircleIcon } from './icons/EliteIcons';
-import { useLocalization } from '../localization/LocalizationContext';
+import { FingerprintIcon, CheckCircleIcon } from './icons/EliteIcons.tsx';
+import { useLocalization } from '../localization/LocalizationContext.tsx';
 
 interface VaultAuthModalProps {
     onClose: () => void;

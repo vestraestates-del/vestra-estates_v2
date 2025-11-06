@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useMemo } from 'react';
-import { parseCurrencyValue } from '../utils/currency';
+import { parseCurrencyValue } from '../utils/currency.ts';
 
 export type Currency = 'USD' | 'EUR' | 'TRY' | 'RUB' | 'GBP';
 type CurrencySymbol = '$' | '€' | '₺' | '₽' | '£';

@@ -1,9 +1,9 @@
 
+
 import React, { useState, useEffect } from 'react';
-// FIX: Added file extension to appData import
 import type { AgendaItem } from '../data/appData.ts';
-import { CloseIcon } from './icons/EliteIcons';
-import Button from './ui/Button';
+import { CloseIcon } from './icons/EliteIcons.tsx';
+import Button from './ui/Button.tsx';
 
 interface AgendaItemModalProps {
     item: AgendaItem | null;

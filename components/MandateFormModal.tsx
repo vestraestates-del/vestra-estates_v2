@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { CloseIcon } from './icons/EliteIcons';
-import Button from './ui/Button';
-import FileUpload from './FileUpload';
-import { useLocalization } from '../localization/LocalizationContext';
+import { CloseIcon } from './icons/EliteIcons.tsx';
+import Button from './ui/Button.tsx';
+import FileUpload from './FileUpload.tsx';
+import { useLocalization } from '../localization/LocalizationContext.tsx';
 
 interface MandateFormModalProps {
     onClose: () => void;

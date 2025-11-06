@@ -1,11 +1,12 @@
 
+
 import React, { useState, lazy, Suspense } from 'react';
-import * as Icons from './icons/EliteIcons';
-import Button from './ui/Button';
-import { useLocalization } from '../localization/LocalizationContext';
+import * as Icons from './icons/EliteIcons.tsx';
+import Button from './ui/Button.tsx';
+import { useLocalization } from '../localization/LocalizationContext.tsx';
 import type { RequestItem } from '../data/appData.ts';
 
-const LifestyleRequestModal = lazy(() => import('./LifestyleRequestModal'));
+const LifestyleRequestModal = lazy(() => import('./LifestyleRequestModal.tsx'));
 
 // This icon map is used by other components (e.g., PropertyDetailModal for amenities)
 // It remains here for that purpose, even if this specific page no longer uses icons for services.

@@ -1,13 +1,12 @@
 
 import React from 'react';
-import WidgetCard from '../ui/WidgetCard';
-import { TrendingUpIcon } from '../icons/EliteIcons';
-// FIX: Added file extension to appData import
+import WidgetCard from '../ui/WidgetCard.tsx';
+import { TrendingUpIcon } from '../icons/EliteIcons.tsx';
 import { portfolioHistoryData, marketComparisonData } from '../../data/appData.ts';
 import { AreaChart, Area, Tooltip, ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
-import { useLocalization } from '../../localization/LocalizationContext';
-import { useCurrency } from '../../localization/CurrencyContext';
-import { parseCurrencyValue } from '../../utils/currency';
+import { useLocalization } from '../../localization/LocalizationContext.tsx';
+import { useCurrency } from '../../localization/CurrencyContext.tsx';
+import { parseCurrencyValue } from '../../utils/currency.ts';
 
 const PropertyValueWidget: React.FC = () => {
     const { t } = useLocalization();

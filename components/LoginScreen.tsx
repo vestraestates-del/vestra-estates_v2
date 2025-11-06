@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { VestraLogo, LogoConfig } from './icons/VestraLogo';
-// FIX: Add file extension to App.tsx import
+import { VestraLogo, LogoConfig } from './icons/VestraLogo.tsx';
 import { User } from '../App.tsx';
-import Button from './ui/Button';
+import Button from './ui/Button.tsx';
 
 interface LoginScreenProps {
   onLogin: (user: User, email: string) => void;

@@ -1,9 +1,9 @@
 
+
 import React, { useState } from 'react';
-// FIX: Added file extension to appData import
 import type { RequestItem } from '../data/appData.ts';
-import { CloseIcon } from './icons/EliteIcons';
-import Button from './ui/Button';
+import { CloseIcon } from './icons/EliteIcons.tsx';
+import Button from './ui/Button.tsx';
 
 interface RequestModalProps {
     onSave: (request: Omit<RequestItem, 'id'>) => void;

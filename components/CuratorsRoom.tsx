@@ -1,12 +1,13 @@
 
 
+
 import React, { useState } from 'react';
-import { ArtItem } from '../data/artData';
-import { WatchItem } from '../data/watchesData';
-import { AutomobileItem } from '../data/automobilesData';
-import { JewelItem } from '../data/jewelsData';
-import { WineItem } from '../data/winesData';
-import { ArtIcon, WatchIcon, CarIcon, JewelIcon, WineIcon } from './icons/EliteIcons';
+import { ArtItem } from '../data/artData.ts';
+import { WatchItem } from '../data/watchesData.ts';
+import { AutomobileItem } from '../data/automobilesData.ts';
+import { JewelItem } from '../data/jewelsData.ts';
+import { WineItem } from '../data/winesData.ts';
+import { ArtIcon, WatchIcon, CarIcon, JewelIcon, WineIcon } from './icons/EliteIcons.tsx';
 
 interface CuratorsRoomProps {
     artCollection: ArtItem[];

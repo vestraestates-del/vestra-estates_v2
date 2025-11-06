@@ -1,11 +1,11 @@
 
 
+
 import React from 'react';
-import { useLocalization } from '../localization/LocalizationContext';
-import { JointVenture } from '../data/jointVenturesData';
-// FIX: Added file extension to appData import
+import { useLocalization } from '../localization/LocalizationContext.tsx';
+import { JointVenture } from '../data/jointVenturesData.ts';
 import type { RequestItem } from '../data/appData.ts';
-import Button from './ui/Button';
+import Button from './ui/Button.tsx';
 
 interface JointVenturesPageProps {
     ventures: JointVenture[];

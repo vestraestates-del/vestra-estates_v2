@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { useLocalization } from '../localization/LocalizationContext';
-import { generationalWealthServices, WealthService } from '../data/generationalWealthData';
-import { TreeIcon, BuildingKeyIcon, UsersGroupIcon, DiamondIcon, PlaneBoatIcon, FingerprintIcon } from './icons/EliteIcons';
-import Button from './ui/Button';
-// FIX: Added file extension to appData import
+import { useLocalization } from '../localization/LocalizationContext.tsx';
+import { generationalWealthServices, WealthService } from '../data/generationalWealthData.ts';
+import { TreeIcon, BuildingKeyIcon, UsersGroupIcon, DiamondIcon, PlaneBoatIcon, FingerprintIcon } from './icons/EliteIcons.tsx';
+import Button from './ui/Button.tsx';
 import type { RequestItem } from '../data/appData.ts';
 
 const iconMap: { [key in WealthService['icon']]: React.FC<React.SVGProps<SVGSVGElement>> } = {

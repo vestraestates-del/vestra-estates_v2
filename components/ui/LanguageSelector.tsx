@@ -1,6 +1,6 @@
 import React from 'react';
-import { useLocalization, Language } from '../../localization/LocalizationContext';
-import { useCurrency, Currency } from '../../localization/CurrencyContext';
+import { useLocalization, Language } from '../../localization/LocalizationContext.tsx';
+import { useCurrency, Currency } from '../../localization/CurrencyContext.tsx';
 
 const languages: { code: Language, name: string, flag: string }[] = [
     { code: 'en', name: 'English', flag: '🇬🇧' },

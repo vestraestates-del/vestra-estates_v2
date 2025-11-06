@@ -1,7 +1,7 @@
 
 
+
 import React, { createContext, useState, useContext, useMemo } from 'react';
-// FIX: Added file extension to translations import
 import { translations } from './translations.ts';
 
 export type Language = 'en' | 'tr' | 'ru' | 'fr' | 'it' | 'es' | 'ar';

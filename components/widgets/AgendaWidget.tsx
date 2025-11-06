@@ -1,11 +1,10 @@
 
 import React, { useState } from 'react';
-import WidgetCard from '../ui/WidgetCard';
-import Button from '../ui/Button';
-import Checkbox from '../ui/Checkbox';
-import AgendaItemModal from '../AgendaItemModal';
-import { ClockIcon, PlusCircleIcon, EditIcon, TrashIcon, InformationCircleIcon } from '../icons/EliteIcons';
-// FIX: Added file extension to appData import
+import WidgetCard from '../ui/WidgetCard.tsx';
+import Button from '../ui/Button.tsx';
+import Checkbox from '../ui/Checkbox.tsx';
+import AgendaItemModal from '../AgendaItemModal.tsx';
+import { ClockIcon, PlusCircleIcon, EditIcon, TrashIcon, InformationCircleIcon } from '../icons/EliteIcons.tsx';
 import { AgendaItem } from '../../data/appData.ts';
 
 interface AgendaWidgetProps {

@@ -1,16 +1,15 @@
 
 import React, { useState } from 'react';
-import PortfolioWidget from './widgets/PortfolioWidget';
-import PropertyValueWidget from './widgets/PropertyValueWidget';
-import AgendaWidget from './widgets/AgendaWidget';
-import RequestsWidget from './widgets/RequestsWidget';
-import AIEvaluationWidget from './widgets/AIEvaluationWidget';
-import CollectionFlowWidget from './widgets/CollectionFlowWidget';
-import PromotionsBanner from './PromotionsBanner';
-import type { PortfolioItem } from '../data/portfolioData';
-// FIX: Add file extension to appData import
+import PortfolioWidget from './widgets/PortfolioWidget.tsx';
+import PropertyValueWidget from './widgets/PropertyValueWidget.tsx';
+import AgendaWidget from './widgets/AgendaWidget.tsx';
+import RequestsWidget from './widgets/RequestsWidget.tsx';
+import AIEvaluationWidget from './widgets/AIEvaluationWidget.tsx';
+import CollectionFlowWidget from './widgets/CollectionFlowWidget.tsx';
+import PromotionsBanner from './PromotionsBanner.tsx';
+import type { PortfolioItem } from '../data/portfolioData.ts';
 import type { AgendaItem, RequestItem } from '../data/appData.ts';
-import { useLocalization } from '../localization/LocalizationContext';
+import { useLocalization } from '../localization/LocalizationContext.tsx';
 
 interface DashboardProps {
   portfolioItems: PortfolioItem[];

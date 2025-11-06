@@ -1,10 +1,10 @@
 
+
 import React from 'react';
-import { useLocalization } from '../localization/LocalizationContext';
-import { familyOfficeServices, FamilyOfficeService } from '../data/familyOfficeData';
-import { ShowcaseIcon, VaultIcon, CheckCircleIcon } from './icons/EliteIcons';
-import Button from './ui/Button';
-// FIX: Added file extension to appData import
+import { useLocalization } from '../localization/LocalizationContext.tsx';
+import { familyOfficeServices, FamilyOfficeService } from '../data/familyOfficeData.ts';
+import { ShowcaseIcon, VaultIcon, CheckCircleIcon } from './icons/EliteIcons.tsx';
+import Button from './ui/Button.tsx';
 import type { RequestItem } from '../data/appData.ts';
 
 const iconMap: { [key in FamilyOfficeService['icon']]: React.FC<React.SVGProps<SVGSVGElement>> } = {

@@ -1,8 +1,9 @@
 
+
 import React, { useEffect, useState } from 'react';
-import type { PortfolioItem } from '../data/portfolioData';
-import { MapPinIcon, MaximizeIcon } from './icons/EliteIcons';
-import { useLocalization } from '../localization/LocalizationContext';
+import type { PortfolioItem } from '../data/portfolioData.ts';
+import { MapPinIcon, MaximizeIcon } from './icons/EliteIcons.tsx';
+import { useLocalization } from '../localization/LocalizationContext.tsx';
 
 // FIX: Switched to static imports for react-leaflet to resolve TypeScript errors
 // caused by incorrect type inference with React.lazy.

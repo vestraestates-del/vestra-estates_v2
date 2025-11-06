@@ -1,11 +1,11 @@
 
+
 import React, { useState } from 'react';
-// FIX: Added file extension to appData import
 import { MandateItem } from '../data/appData.ts';
-import { useLocalization } from '../localization/LocalizationContext';
-import { PlusCircleIcon, EditIcon, EyeIcon, TargetIcon } from './icons/EliteIcons';
-import Button from './ui/Button';
-import MandateFormModal from './MandateFormModal';
+import { useLocalization } from '../localization/LocalizationContext.tsx';
+import { PlusCircleIcon, EditIcon, EyeIcon, TargetIcon } from './icons/EliteIcons.tsx';
+import Button from './ui/Button.tsx';
+import MandateFormModal from './MandateFormModal.tsx';
 
 interface AcquisitionMandatesPageProps {
     mandates: MandateItem[];

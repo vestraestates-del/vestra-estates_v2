@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import WidgetCard from '../ui/WidgetCard';
-import { AIIcon } from '../icons/EliteIcons';
-import type { PortfolioItem } from '../../data/portfolioData';
-import { useLocalization } from '../../localization/LocalizationContext';
+import WidgetCard from '../ui/WidgetCard.tsx';
+import { AIIcon } from '../icons/EliteIcons.tsx';
+import type { PortfolioItem } from '../../data/portfolioData.ts';
+import { useLocalization } from '../../localization/LocalizationContext.tsx';
 
 interface AIEvaluationWidgetProps {
   property: PortfolioItem | null;

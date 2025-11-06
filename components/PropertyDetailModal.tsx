@@ -1,18 +1,18 @@
 
 
+
 import React, { useState, useMemo, useRef, useEffect, lazy, Suspense } from 'react';
-import type { PortfolioItem } from '../data/portfolioData';
-import { CloseIcon, MapPinIcon, CheckSquareIcon, DollarSignIcon, PlayCircleIcon, ShareIcon, CheckIcon, PlayIcon, PauseIcon, VolumeMuteIcon, VolumeLowIcon, VolumeHighIcon, MaximizeIcon, MinimizeIcon, ThreeDIcon, PlusCircleIcon, LockClosedIcon, PencilSquareIcon } from './icons/EliteIcons';
-import Button from './ui/Button';
-import { ServiceIcon } from './ServicesPage';
-// FIX: Added file extension to appData import
+import type { PortfolioItem } from '../data/portfolioData.ts';
+import { CloseIcon, MapPinIcon, CheckSquareIcon, DollarSignIcon, PlayCircleIcon, ShareIcon, CheckIcon, PlayIcon, PauseIcon, VolumeMuteIcon, VolumeLowIcon, VolumeHighIcon, MaximizeIcon, MinimizeIcon, ThreeDIcon, PlusCircleIcon, LockClosedIcon, PencilSquareIcon } from './icons/EliteIcons.tsx';
+import Button from './ui/Button.tsx';
+import { ServiceIcon } from './ServicesPage.tsx';
 import type { AgendaItem } from '../data/appData.ts';
-import { useLocalization } from '../localization/LocalizationContext';
-import { useCurrency } from '../localization/CurrencyContext';
+import { useLocalization } from '../localization/LocalizationContext.tsx';
+import { useCurrency } from '../localization/CurrencyContext.tsx';
 import { AreaChart, Area, Tooltip, ResponsiveContainer } from 'recharts';
 
-const SchedulingModal = lazy(() => import('./SchedulingModal'));
-const NdaModal = lazy(() => import('./NdaModal'));
+const SchedulingModal = lazy(() => import('./SchedulingModal.tsx'));
+const NdaModal = lazy(() => import('./NdaModal.tsx'));
 
 interface MediaItem {
   url: string;

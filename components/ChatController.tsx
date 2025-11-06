@@ -1,18 +1,16 @@
 
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { CloseIcon, SendIcon, MicrophoneIcon, StopCircleIcon } from './icons/EliteIcons';
-import type { PortfolioItem } from '../data/portfolioData';
-import type { ArtItem } from '../data/artData';
-import type { RentalItem } from '../data/rentalsData';
-import type { WatchItem } from '../data/watchesData';
-import type { AutomobileItem } from '../data/automobilesData';
-import type { JewelItem } from '../data/jewelsData';
-// FIX: Added file extension to appData import
+import { CloseIcon, SendIcon, MicrophoneIcon, StopCircleIcon } from './icons/EliteIcons.tsx';
+import type { PortfolioItem } from '../data/portfolioData.ts';
+import type { ArtItem } from '../data/artData.ts';
+import type { RentalItem } from '../data/rentalsData.ts';
+import type { WatchItem } from '../data/watchesData.ts';
+import type { AutomobileItem } from '../data/automobilesData.ts';
+import type { JewelItem } from '../data/jewelsData.ts';
 import type { AgendaItem, RequestItem } from '../data/appData.ts';
-// FIX: Import `lifestyleServices` as the single source of service data.
-import { lifestyleServices } from './ServicesPage';
-import type { CircleMember } from '../data/circleData';
-import { useLocalization } from '../localization/LocalizationContext';
+import { lifestyleServices } from './ServicesPage.tsx';
+import type { CircleMember } from '../data/circleData.ts';
+import { useLocalization } from '../localization/LocalizationContext.tsx';
 
 interface Message {
   sender: 'user' | 'bot';

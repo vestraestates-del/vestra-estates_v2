@@ -1,9 +1,9 @@
 import React from 'react';
-import { useLocalization } from '../localization/LocalizationContext';
-import { aviationYachtingServices, AviationYachtingService, FleetAsset } from '../data/aviationYachtingData';
-import { PlaneBoatIcon, WavesIcon, CheckCircleIcon } from './icons/EliteIcons';
-import Button from './ui/Button';
-import WidgetCard from './ui/WidgetCard';
+import { useLocalization } from '../localization/LocalizationContext.tsx';
+import { aviationYachtingServices, AviationYachtingService, FleetAsset } from '../data/aviationYachtingData.ts';
+import { PlaneBoatIcon, WavesIcon, CheckCircleIcon } from './icons/EliteIcons.tsx';
+import Button from './ui/Button.tsx';
+import WidgetCard from './ui/WidgetCard.tsx';
 
 const iconMap: { [key in AviationYachtingService['icon']]: React.FC<React.SVGProps<SVGSVGElement>> } = {
     Plane: PlaneBoatIcon,

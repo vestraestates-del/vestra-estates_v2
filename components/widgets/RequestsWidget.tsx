@@ -1,11 +1,10 @@
 
 import React, { useState } from 'react';
-import WidgetCard from '../ui/WidgetCard';
-import { NotificationIcon, PlusCircleIcon, InformationCircleIcon } from '../icons/EliteIcons';
-// FIX: Added file extension to appData import
+import WidgetCard from '../ui/WidgetCard.tsx';
+import { NotificationIcon, PlusCircleIcon, InformationCircleIcon } from '../icons/EliteIcons.tsx';
 import type { RequestItem } from '../../data/appData.ts';
-import Button from '../ui/Button';
-import RequestModal from '../RequestModal';
+import Button from '../ui/Button.tsx';
+import RequestModal from '../RequestModal.tsx';
 
 interface RequestsWidgetProps {
   items: RequestItem[];

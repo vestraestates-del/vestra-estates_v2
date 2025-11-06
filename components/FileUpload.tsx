@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { DocumentArrowDownIcon, CheckCircleIcon, CloseIcon } from './icons/EliteIcons';
+import { DocumentArrowDownIcon, CheckCircleIcon, CloseIcon } from './icons/EliteIcons.tsx';
 
 interface FileUploadProps {
     label: string;

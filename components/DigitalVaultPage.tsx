@@ -1,11 +1,11 @@
 import React, { useState, lazy, Suspense } from 'react';
-import { useLocalization } from '../localization/LocalizationContext';
-import { initialVaultDocuments, VaultDocument } from '../data/digitalVaultData';
-import { LockClosedIcon, VaultIcon, DocumentTextIcon } from './icons/EliteIcons';
-import Button from './ui/Button';
+import { useLocalization } from '../localization/LocalizationContext.tsx';
+import { initialVaultDocuments, VaultDocument } from '../data/digitalVaultData.ts';
+import { LockClosedIcon, VaultIcon, DocumentTextIcon } from './icons/EliteIcons.tsx';
+import Button from './ui/Button.tsx';
 
-const VaultAuthModal = lazy(() => import('./VaultAuthModal'));
-const SecureDocumentViewerModal = lazy(() => import('./SecureDocumentViewerModal'));
+const VaultAuthModal = lazy(() => import('./VaultAuthModal.tsx'));
+const SecureDocumentViewerModal = lazy(() => import('./SecureDocumentViewerModal.tsx'));
 
 type SecurityLevelInfo = {
   level: 'High' | 'Medium' | 'Low';

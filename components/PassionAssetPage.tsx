@@ -1,9 +1,9 @@
 import React from 'react';
-import { useLocalization } from '../localization/LocalizationContext';
-import { passionAssetModules, PassionAsset, ManagedCollectionSummary } from '../data/passionAssetData';
-import { ArtIcon, WatchIcon, CarIcon, JewelIcon, WineIcon } from './icons/EliteIcons';
-import Button from './ui/Button';
-import WidgetCard from './ui/WidgetCard';
+import { useLocalization } from '../localization/LocalizationContext.tsx';
+import { passionAssetModules, PassionAsset, ManagedCollectionSummary } from '../data/passionAssetData.ts';
+import { ArtIcon, WatchIcon, CarIcon, JewelIcon, WineIcon } from './icons/EliteIcons.tsx';
+import Button from './ui/Button.tsx';
+import WidgetCard from './ui/WidgetCard.tsx';
 
 const iconMap: { [key in PassionAsset['icon']]: React.FC<React.SVGProps<SVGSVGElement>> } = {
     Art: ArtIcon,

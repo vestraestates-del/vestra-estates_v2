@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { CloseIcon, ShieldCheckIcon } from './icons/EliteIcons';
-import Button from './ui/Button';
-import FileUpload from './FileUpload';
+import { CloseIcon, ShieldCheckIcon } from './icons/EliteIcons.tsx';
+import Button from './ui/Button.tsx';
+import FileUpload from './FileUpload.tsx';
 
 interface VerificationModalProps {
     onClose: () => void;

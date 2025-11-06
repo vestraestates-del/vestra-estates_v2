@@ -1,10 +1,9 @@
 
 // FIX: Create PhilanthropyBoardPage component to display project data and handle user interactions, fixing module resolution error.
 import React from 'react';
-import type { PhilanthropyProject } from '../data/philanthropyData';
-// FIX: Added file extension to appData import
+import type { PhilanthropyProject } from '../data/philanthropyData.ts';
 import type { RequestItem } from '../data/appData.ts';
-import Button from './ui/Button';
+import Button from './ui/Button.tsx';
 
 interface PhilanthropyBoardPageProps {
     projects: PhilanthropyProject[];

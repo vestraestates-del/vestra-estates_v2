@@ -1,6 +1,6 @@
 import React from 'react';
-import type { CircleMember } from '../data/circleData';
-import { BriefcaseIcon, HeartIcon, MessageIcon } from './icons/EliteIcons';
+import type { CircleMember } from '../data/circleData.ts';
+import { BriefcaseIcon, HeartIcon, MessageIcon } from './icons/EliteIcons.tsx';
 
 interface CirclePageProps {
   members: CircleMember[];

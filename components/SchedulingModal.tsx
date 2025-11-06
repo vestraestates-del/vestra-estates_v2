@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import type { PortfolioItem } from '../data/portfolioData';
-import { CloseIcon } from './icons/EliteIcons';
-import Button from './ui/Button';
-import { useLocalization } from '../localization/LocalizationContext';
+import type { PortfolioItem } from '../data/portfolioData.ts';
+import { CloseIcon } from './icons/EliteIcons.tsx';
+import Button from './ui/Button.tsx';
+import { useLocalization } from '../localization/LocalizationContext.tsx';
 
 interface SchedulingModalProps {
     property: PortfolioItem;

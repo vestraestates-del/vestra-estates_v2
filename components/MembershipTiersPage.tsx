@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import type { LogoConfig } from './icons/VestraLogo';
-import { VestraLogo } from './icons/VestraLogo';
-import { CloseIcon, CheckCircleIcon } from './icons/EliteIcons';
-import Button from './ui/Button';
-import VerificationModal from './VerificationModal';
+import type { LogoConfig } from './icons/VestraLogo.tsx';
+import { VestraLogo } from './icons/VestraLogo.tsx';
+import { CloseIcon, CheckCircleIcon } from './icons/EliteIcons.tsx';
+import Button from './ui/Button.tsx';
+import VerificationModal from './VerificationModal.tsx';
 
 interface MembershipTiersPageProps {
   onBack: () => void;
