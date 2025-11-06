@@ -1,77 +1,45 @@
-// This is the full content of data/userData.ts
 
-import type { User } from '../App';
+export type UserTier = 'Elit Access' | 'Diamond Access' | 'Royal Black Access';
 
-export type AccountStatus = 'Active' | 'Pending' | 'Banned';
-
-export interface MockUser extends User {
+export interface MockUser {
+    name: string;
+    email: string;
+    type: 'user' | 'admin';
+    tier?: UserTier;
+    avatar: string;
     password?: string;
-    firstLogin?: boolean;
-    country?: string;
-    accountStatus?: AccountStatus;
-    assignedConcierge?: string;
-    notes?: string;
 }
 
 export const mockUsers: { [key: string]: MockUser } = {
     'adrian@vestra.com': {
-        name: "Adrian Roth",
+        name: 'Adrian Roth',
         email: 'adrian@vestra.com',
         type: 'user',
         tier: 'Diamond Access',
-        password: 'password',
-        firstLogin: true,
-        country: 'Switzerland',
-        accountStatus: 'Active',
-        assignedConcierge: 'C. Blackwood',
-        notes: 'Primary contact for Aethelred Capital. Interests: Classic Cars, Geopolitics.',
-    },
-    'sofia@vestra.com': {
-        name: "Sofia Petrova",
-        email: 'sofia@vestra.com',
-        type: 'user',
-        tier: 'Royal Black Access',
-        password: 'password',
-        firstLogin: false,
-        country: 'Monaco',
-        accountStatus: 'Active',
-        assignedConcierge: 'C. Blackwood',
-        notes: 'Lead on sustainable development projects.',
+        password: 'password123',
+        avatar: `https://i.pravatar.cc/150?u=adrian`,
     },
     'isabella@vestra.com': {
-        name: "Isabella Rossi",
+        name: 'Isabella Rossi',
         email: 'isabella@vestra.com',
         type: 'user',
         tier: 'Elit Access',
-        password: 'password',
-        firstLogin: false,
-        country: 'Italy',
-        accountStatus: 'Active',
-        assignedConcierge: 'A. Dubois',
-        notes: 'Curator for The Rossi Collection. Focus on Renaissance Art.',
+        password: 'password123',
+        avatar: `https://i.pravatar.cc/150?u=isabella`,
+    },
+    'sofia@vestra.com': {
+        name: 'Sofia Petrova',
+        email: 'sofia@vestra.com',
+        type: 'user',
+        tier: 'Royal Black Access',
+        password: 'password123',
+        avatar: `https://i.pravatar.cc/150?u=sofia`,
     },
     'admin@vestra.com': {
-        name: "C. Blackwood",
+        name: 'C. Blackwood',
         email: 'admin@vestra.com',
         type: 'admin',
-        tier: 'Royal Black Access',
-        password: 'admin',
-        firstLogin: false,
-        country: 'United Kingdom',
-        accountStatus: 'Active',
-        assignedConcierge: 'Self',
-        notes: 'Platform Administrator.',
+        password: 'adminpassword',
+        avatar: `https://i.pravatar.cc/150?u=blackwood`,
     },
-    'new.applicant@vestra.com': {
-        name: "New Applicant",
-        email: 'new.applicant@vestra.com',
-        type: 'user',
-        tier: 'Elit Access',
-        password: 'password',
-        firstLogin: true,
-        country: 'USA',
-        accountStatus: 'Pending',
-        assignedConcierge: '',
-        notes: 'Awaiting verification after tier selection.',
-    }
 };

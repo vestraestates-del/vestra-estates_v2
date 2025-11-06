@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 export const CloseIcon = (props: React.SVGProps<SVGSVGElement>) => (
