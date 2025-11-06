@@ -1,1 +1,27 @@
-full contents of package.json
+{
+  "name": "vestra-estates-vercel",
+  "version": "1.0.0",
+  "description": "Deployment package for Vestra Estates on Vercel.",
+  "main": "index.js",
+  "scripts": {
+    "build": "mkdir -p dist && cp index.html dist/ && esbuild index.tsx --bundle --outfile=dist/index.js --jsx=automatic --loader:.ts=tsx --define:process.env.NODE_ENV='\"production\"'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google/genai": "^1.29.0",
+    "leaflet": "^1.9.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-leaflet": "^4.2.1",
+    "recharts": "^2.12.7"
+  },
+  "devDependencies": {
+    "@types/leaflet": "^1.9.12",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "esbuild": "^0.23.0",
+    "typescript": "^5.5.3"
+  }
+}
