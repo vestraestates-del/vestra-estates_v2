@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "mkdir dist && cp index.html dist/ && esbuild index.tsx --bundle --outfile=dist/index.js --jsx=automatic --loader:.ts=tsx --define:process.env.NODE_ENV='\"production\"'"
+    "build": "mkdir -p dist && cp index.html dist/ && esbuild index.tsx --bundle --outfile=dist/index.js --jsx=automatic --loader:.ts=tsx --define:process.env.NODE_ENV='\"production\"' --external:react --external:react-dom --external:react-dom/client --external:react/jsx-runtime --external:recharts --external:leaflet --external:react-leaflet"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",
