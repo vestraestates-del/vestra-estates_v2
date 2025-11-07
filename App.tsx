@@ -76,18 +76,17 @@ export interface BackgroundImages {
 }
 
 const defaultLogoConfig: LogoConfig = {
-    type: 'text',
-    text: 'VESTRA ESTATES',
+    type: 'image',
+    url: 'https://i.ibb.co/rRybtWz/Logo-vestra-estates-elit.png',
     navSize: 40,
     loginSize: 80,
     mobileNavSize: 32,
-    fontWeight: 'bold',
 };
 
 const defaultBackgroundImages: BackgroundImages = {
-    day: 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg',
-    evening: 'https://images.pexels.com/photos/1078983/pexels-photo-1078983.jpeg',
-    night: 'https://images.pexels.com/photos/2249530/pexels-photo-2249530.jpeg',
+    day: 'https://i.ibb.co/xc1yx2M/DAY-0512-LE.jpg',
+    evening: 'https://i.ibb.co/yn2PGHd/EVN-0511-LE.jpg',
+    night: 'https://i.ibb.co/TM2fv3Gn/NGH-0510-LE.jpg',
 };
 
 
