@@ -8,9 +8,9 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: `Method ${req.method} Not Allowed` });
   }
 
-  const { prompt, contents, systemInstruction } = req.body;
-  if (!prompt && !contents) {
-    return res.status(400).json({ error: 'Either "prompt" or "contents" is required in the request body.' });
+  const { model, contents, config } = req.body;
+  if (!contents) {
+    return res.status(400).json({ error: '"contents" is required in the request body.' });
   }
 
   const API_KEY = process.env.API_KEY;
@@ -23,19 +23,30 @@ export default async function handler(req, res) {
     const ai = new GoogleGenAI({ apiKey: API_KEY });
 
     const requestPayload = {
-      model: 'gemini-2.5-flash',
-      contents: contents || [{ role: 'user', parts: [{ text: prompt }] }],
-      ...(systemInstruction && { config: { systemInstruction } })
+      model: model || 'gemini-2.5-flash', // Default to flash if not provided
+      contents,
+      ...(config && { config })
     };
     
     const response = await ai.models.generateContent(requestPayload);
     
-    // The .text getter is the most reliable way to get the text output.
+    // Handle image modality response
+    const imageParts = response.candidates?.[0]?.content?.parts?.filter(p => p.inlineData && p.inlineData.mimeType.startsWith('image/'));
+    if (imageParts && imageParts.length > 0) {
+        const images = imageParts.map(p => p.inlineData.data);
+        return res.status(200).json({ images });
+    }
+    
+    // Default to text response using the .text getter
     const text = response.text;
     
-    // It's good practice to check if the text is empty, as it could indicate a safety block or other issue.
-    if (!text) {
-        console.warn('Gemini API returned an empty text response.', { response });
+    if (text === undefined || text === null) {
+        console.warn('Gemini API returned an empty or undefined text response.', { response });
+        // Check for safety ratings to provide a more specific error
+        const finishReason = response.candidates?.[0]?.finishReason;
+        if (finishReason === 'SAFETY') {
+             return res.status(200).json({ text: "The response was blocked due to safety concerns. Please modify your prompt." });
+        }
         return res.status(200).json({ text: "I am unable to provide a response at this time." });
     }
 

@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CloseIcon } from './icons/EliteIcons.tsx';
 import Button from './ui/Button.tsx';
 import FileUpload from './FileUpload.tsx';
 import { useLocalization } from '../localization/LocalizationContext.tsx';
+import { MandateItem } from '../data/appData.ts';
 
 interface MandateFormModalProps {
+    mandate: MandateItem | null;
     onClose: () => void;
-    onSave: (mandate: Omit<any, 'id' | 'status' | 'submittedDate'>) => void;
+    onSave: (mandate: Omit<MandateItem, 'id' | 'status' | 'submittedDate'>) => void;
 }
 
-const MandateFormModal: React.FC<MandateFormModalProps> = ({ onClose, onSave }) => {
+const MandateFormModal: React.FC<MandateFormModalProps> = ({ mandate, onClose, onSave }) => {
     const { t } = useLocalization();
     const [propertyType, setPropertyType] = useState('');
     const [region, setRegion] = useState('');
@@ -17,8 +19,20 @@ const MandateFormModal: React.FC<MandateFormModalProps> = ({ onClose, onSave }) 
     const [budgetMax, setBudgetMax] = useState('');
     const [features, setFeatures] = useState('');
     const [financialsFile, setFinancialsFile] = useState<File | null>(null);
+    const [existingFinancialDoc, setExistingFinancialDoc] = useState<string | undefined>(undefined);
 
-    const canSubmit = propertyType && region && budgetMin && budgetMax && features && financialsFile;
+    useEffect(() => {
+        if (mandate) {
+            setPropertyType(mandate.propertyType);
+            setRegion(mandate.region);
+            setBudgetMin(String(mandate.budgetMin));
+            setBudgetMax(String(mandate.budgetMax));
+            setFeatures(mandate.features);
+            setExistingFinancialDoc(mandate.financialDocUrl);
+        }
+    }, [mandate]);
+
+    const canSubmit = propertyType && region && budgetMin && budgetMax && features && (financialsFile || existingFinancialDoc);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -32,17 +46,19 @@ const MandateFormModal: React.FC<MandateFormModalProps> = ({ onClose, onSave }) 
             budgetMin: Number(budgetMin),
             budgetMax: Number(budgetMax),
             features,
-            financialDocUrl: financialsFile.name, // In a real app, this would be a URL after upload
+            financialDocUrl: financialsFile?.name || existingFinancialDoc,
         });
     };
+    
+    const title = mandate ? 'Edit Acquisition Mandate' : t('mandates.modalTitle');
 
     return (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-lg z-50 flex items-center justify-center animate-fade-in" onClick={onClose}>
             <div className="bg-[#0c0c10] border border-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl flex flex-col" onClick={e => e.stopPropagation()}>
                 <div className="flex-shrink-0 p-4 border-b border-gray-800 flex justify-between items-center">
                     <div>
-                        <h2 className="text-xl font-bold text-white">{t('mandates.modalTitle')}</h2>
-                        <p className="text-sm text-gray-400">{t('mandates.modalSubtitle')}</p>
+                        <h2 className="text-xl font-bold text-white">{title}</h2>
+                        {!mandate && <p className="text-sm text-gray-400">{t('mandates.modalSubtitle')}</p>}
                     </div>
                     <button onClick={onClose} className="p-2 rounded-full text-gray-500 hover:bg-white/10 hover:text-white">
                         <CloseIcon className="w-6 h-6" />
@@ -100,6 +116,12 @@ const MandateFormModal: React.FC<MandateFormModalProps> = ({ onClose, onSave }) 
                                 className="w-full bg-gray-900 border border-gray-700 rounded-md px-3 py-2 text-gray-300 focus:ring-2 focus:ring-cyan-500"
                             />
                         </div>
+                        
+                        {existingFinancialDoc && !financialsFile && (
+                            <div className="text-sm text-gray-400">
+                                Current document: <span className="font-semibold text-cyan-400">{existingFinancialDoc}</span>. Upload a new file to replace it.
+                            </div>
+                        )}
 
                         <FileUpload
                             label={t('mandates.form.financials')}
@@ -111,7 +133,7 @@ const MandateFormModal: React.FC<MandateFormModalProps> = ({ onClose, onSave }) 
                     <div className="flex-shrink-0 p-4 border-t border-gray-800 flex justify-end gap-3">
                         <Button variant="secondary" type="button" onClick={onClose}>Cancel</Button>
                         <Button variant="primary" type="submit" disabled={!canSubmit}>
-                            {t('mandates.form.submitButton')}
+                            {mandate ? 'Save Changes' : t('mandates.form.submitButton')}
                         </Button>
                     </div>
                 </form>

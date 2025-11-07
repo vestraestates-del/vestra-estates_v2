@@ -1,7 +1,7 @@
 import React from 'react';
-import { OffMarketProperty } from '../data/offMarketData';
-import { useLocalization } from '../localization/LocalizationContext';
-import { VaultIcon, ThreeDIcon } from './icons/EliteIcons';
+import { OffMarketProperty } from '../data/offMarketData.ts';
+import { useLocalization } from '../localization/LocalizationContext.tsx';
+import { VaultIcon, ThreeDIcon } from './icons/EliteIcons.tsx';
 
 interface OffMarketIntelligencePageProps {
     properties: OffMarketProperty[];

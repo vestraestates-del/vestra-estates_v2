@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect, lazy, Suspense } from 'react';
 
 // Contexts
@@ -40,6 +38,7 @@ const AdminPage = lazy(() => import('./components/admin/AdminPage.tsx'));
 const MembershipTiersPage = lazy(() => import('./components/MembershipTiersPage.tsx'));
 const PrivacyAgreementModal = lazy(() => import('./components/PrivacyAgreementModal.tsx'));
 const MfaModal = lazy(() => import('./components/MfaModal.tsx'));
+const OffMarketDetailModal = lazy(() => import('./components/OffMarketDetailModal.tsx'));
 
 // Data
 import { initialPortfolioItems, PortfolioItem } from './data/portfolioData.ts';
@@ -77,7 +76,7 @@ export interface BackgroundImages {
 
 const defaultLogoConfig: LogoConfig = {
     type: 'image',
-    url: 'https://i.ibb.co/rRybtWz/Logo-vestra-estates-elit.png',
+    url: 'https://i.ibb.co/C2rP6P5/vestra-key-logo.png',
     navSize: 40,
     loginSize: 80,
     mobileNavSize: 32,
@@ -195,6 +194,16 @@ const App: React.FC = () => {
         const newRequest = { ...request, id: Date.now(), requester: user?.name || 'Unknown' };
         setRequestItems(prev => [newRequest, ...prev]);
     };
+    const handleRequestOffMarketVisit = (property: OffMarketProperty) => {
+        handleAddRequest({
+            type: 'Action',
+            title: `Request Viewing: ${property.codename}`,
+            assignee: 'Senior Partner',
+            status: 'Urgent',
+            details: `Client has requested a private viewing for the off-market property "${property.codename}" in ${property.location}.`,
+        });
+        alert('Your request for a private viewing has been confidentially submitted. A Senior Partner will be in contact shortly.');
+    };
     const handleUpdateRequest = (id: number, newStatus: RequestItem['status']) => setRequestItems(requestItems.map(item => item.id === id ? { ...item, status: newStatus } : item));
     const handleSaveOrUpdateMandate = (mandate: MandateItem) => {
         const exists = mandates.some(m => m.id === mandate.id);
@@ -233,7 +242,7 @@ const App: React.FC = () => {
             case 'circle': return <CirclePage members={circleMembers.filter(m => m.email !== user?.email)} onOpenChat={setChattingWith} unreadMessages={unreadMessages} />;
             case 'mandates': return <AcquisitionMandatesPage mandates={mandates} onSaveOrUpdateMandate={handleSaveOrUpdateMandate} onOpenGhostBidModal={handleOpenGhostBidModal} />;
             case 'off-market': return <OffMarketIntelligencePage properties={offMarketProperties} onOpenDetail={setSelectedOffMarketProperty} />;
-            case 'market-intelligence': return <MarketIntelligencePage user={user!} onUpgrade={() => setShowTiers(true)} />;
+            case 'market-intelligence': return <MarketIntelligencePage user={user!} onUpgrade={() => setShowTiers(true)} portfolioItems={portfolioItems} onAddRequest={handleAddRequest}/>;
             case 'ventures': return <JointVenturesPage ventures={initialJointVentures} onAddRequest={handleAddRequest} />;
             case 'security': return <SecurityDiscretionPage onAddRequest={handleAddRequest} />;
             case 'private-desk': return <PrivateDeskPage user={user!} onOpenRequestModal={(type) => { setPrivateDeskRequestType(type); setIsPrivateDeskModalOpen(true); }} onNavigate={setActivePage} onOpenChat={setChattingWith} privateDeskMember={circleMembers.find(m => m.email === 'admin@vestra.com')!} />;
@@ -276,7 +285,7 @@ const App: React.FC = () => {
                     {chattingWith && <div className="fixed bottom-4 right-4 z-30"><MemberChatWindow member={chattingWith} onClose={() => setChattingWith(null)} onNewMessage={() => setUnreadMessages(prev => ({...prev, [chattingWith.id]: (prev[chattingWith.id] || 0) + 1}))} {...{ portfolioItems, artCollection, specialRentals: initialSpecialRentals, watchCollection, automobileCollection, jewelCollection, agendaItems, requestItems }} /></div>}
                     <Suspense fallback={<div />}>
                         {selectedProperty && <PropertyDetailModal property={selectedProperty} onClose={() => setSelectedProperty(null)} userType={user.type} onScheduleViewing={handleSaveAgenda} signedNdaIds={signedNdaIds} onSignNda={handleSignNda} onUpdateProperty={handleUpdateProperty}/>}
-                        {selectedOffMarketProperty && <OffMarketIntelligencePage properties={[selectedOffMarketProperty]} onOpenDetail={setSelectedOffMarketProperty} />}
+                        {selectedOffMarketProperty && <OffMarketDetailModal property={selectedOffMarketProperty} onClose={() => setSelectedOffMarketProperty(null)} onRequestVisit={handleRequestOffMarketVisit} />}
                         {isGhostBidModalOpen && mandateForGhostBid && <GhostBidModal mandate={mandateForGhostBid} onClose={() => setIsGhostBidModalOpen(false)} onSave={(mandate) => { handleSaveOrUpdateMandate(mandate); setIsGhostBidModalOpen(false); }} />}
                         {isPrivateDeskModalOpen && <PrivateDeskRequestModal isOpen={isPrivateDeskModalOpen} requestType={privateDeskRequestType} user={user} onClose={() => setIsPrivateDeskModalOpen(false)} onSave={(details) => { handleAddRequest({ type: 'Action', title: `Private Desk: ${privateDeskRequestType}`, assignee: 'Senior Partner', status: 'Urgent', details }); setIsPrivateDeskModalOpen(false); }} />}
                         {isFamilyOfficeBlueprintModalOpen && <FamilyOfficeBlueprintModal onClose={() => setIsFamilyOfficeBlueprintModalOpen(false)} onSave={(details) => { handleAddRequest({ type: 'Action', title: 'Family Office Blueprint Request', assignee: 'Senior Partner', status: 'Urgent', details: JSON.stringify(details) }); setIsFamilyOfficeBlueprintModalOpen(false); }} />}
