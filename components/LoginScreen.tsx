@@ -35,7 +35,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ slogan, onLogin, onShowTiers,
             className="flex h-screen w-screen items-center justify-center bg-black bg-cover bg-center transition-all duration-1000 p-4" 
             style={{ backgroundImage: `url(${backgroundImage})` }}
         >
-            <div className="w-full max-w-sm rounded-xl border border-gray-800 bg-[#111116]/60 p-8 shadow-2xl backdrop-blur-lg animate-fade-in">
+            <div className="w-full max-w-sm rounded-xl border border-white/10 bg-black/70 p-8 shadow-2xl backdrop-blur-xl animate-fade-in">
                 <div className="mb-8 flex flex-col items-center text-center">
                     <VestraLogo config={logoConfig} size={logoConfig.loginSize} className="text-cyan-400" />
                     <p className="mt-6 text-lg font-medium text-gray-200">{slogan}</p>

@@ -90,8 +90,8 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, onNavigate, onLogout, use
     });
 
     const sidebarContent = (logoSize?: number) => (
-        <div className="flex flex-col h-full bg-[#0c0c10]/80 backdrop-blur-xl border-r border-gray-800">
-            <div className="flex items-center justify-center h-20 border-b border-gray-800 flex-shrink-0 px-4">
+        <div className="flex flex-col h-full bg-[#0c0c10]/80 backdrop-blur-2xl border-r border-white/10">
+            <div className="flex items-center justify-center h-20 border-b border-white/10 flex-shrink-0 px-4">
                 <VestraLogo config={logoConfig} size={logoSize} />
             </div>
 
@@ -123,7 +123,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, onNavigate, onLogout, use
 
             <div className="flex-shrink-0">
                 <LanguageSelector />
-                <div className="p-3 border-t border-gray-800">
+                <div className="p-3 border-t border-white/10">
                     <button
                         onClick={onLogout}
                         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium text-gray-400 hover:bg-red-500/10 hover:text-red-400 transition-colors"
