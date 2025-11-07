@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { CloseIcon, LockClosedIcon, DocumentTextIcon } from './icons/EliteIcons';
-import { VaultDocument } from '../data/digitalVaultData';
-import { useLocalization } from '../localization/LocalizationContext';
+import { CloseIcon, LockClosedIcon, DocumentTextIcon } from './icons/EliteIcons.tsx';
+import { VaultDocument } from '../data/digitalVaultData.ts';
+import { useLocalization } from '../localization/LocalizationContext.tsx';
 
 interface SecureDocumentViewerModalProps {
     document: VaultDocument;
