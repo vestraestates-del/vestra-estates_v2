@@ -12,7 +12,6 @@ interface SidebarProps {
   onLogout: () => void;
   user: User;
   logoConfig: LogoConfig;
-  onGenerationalOfficeNav: (page: GenerationalPage) => void;
 }
 
 const NavLink: React.FC<{
@@ -44,7 +43,7 @@ const SectionHeader: React.FC<{ label: string }> = ({ label }) => (
     </h3>
 );
 
-const Sidebar: React.FC<SidebarProps> = ({ activePage, onNavigate, onLogout, user, logoConfig, onGenerationalOfficeNav }) => {
+const Sidebar: React.FC<SidebarProps> = ({ activePage, onNavigate, onLogout, user, logoConfig }) => {
     const { t } = useLocalization();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -107,13 +106,9 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, onNavigate, onLogout, use
                             id={item.id}
                             label={t(item.labelKey)}
                             icon={item.icon}
-                            isActive={activePage === item.id}
+                            isActive={activePage === item.id || (item.id === 'generational-wealth' && activePage.startsWith('generational-'))}
                             onClick={() => {
-                                if (item.id === 'generational-wealth') {
-                                    onGenerationalOfficeNav('generational-wealth');
-                                } else {
-                                    onNavigate(item.id);
-                                }
+                                onNavigate(item.id);
                                 setIsMobileMenuOpen(false);
                             }}
                         />

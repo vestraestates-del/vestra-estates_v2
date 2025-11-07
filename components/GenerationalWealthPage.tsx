@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useLocalization } from '../localization/LocalizationContext.tsx';
 import { generationalWealthServices, WealthService } from '../data/generationalWealthData.ts';
 import { TreeIcon, BuildingKeyIcon, UsersGroupIcon, DiamondIcon, PlaneBoatIcon, FingerprintIcon } from './icons/EliteIcons.tsx';
-import Button from './ui/Button.tsx';
-import type { RequestItem } from '../data/appData.ts';
 
 const iconMap: { [key in WealthService['icon']]: React.FC<React.SVGProps<SVGSVGElement>> } = {
     Tree: TreeIcon,
@@ -15,112 +13,74 @@ const iconMap: { [key in WealthService['icon']]: React.FC<React.SVGProps<SVGSVGE
 };
 
 interface GenerationalWealthPageProps {
-     onAddRequest: (request: Omit<RequestItem, 'id' | 'requester'>) => void;
+    onNavigate: (page: string) => void;
 }
 
-const briefingCache = new Map<string, string>();
-
-const GenerationalWealthPage: React.FC<GenerationalWealthPageProps> = ({ onAddRequest }) => {
-    const { t, language } = useLocalization();
-    const [expandedService, setExpandedService] = useState<string | null>(null);
-    const [briefings, setBriefings] = useState<Record<string, string>>({});
-    const [loading, setLoading] = useState<Record<string, boolean>>({});
-
-    const handleToggleBriefing = async (service: WealthService) => {
-        const serviceId = service.id;
-        if (expandedService === serviceId) {
-            setExpandedService(null);
-            return;
-        }
-
-        setExpandedService(serviceId);
-
-        const cacheKey = `${serviceId}-${language}`;
-        if (briefings[serviceId] || briefingCache.has(cacheKey)) {
-            if (briefingCache.has(cacheKey) && !briefings[serviceId]) {
-                setBriefings(prev => ({ ...prev, [serviceId]: briefingCache.get(cacheKey)! }));
-            }
-            return;
-        }
-
-        setLoading(prev => ({...prev, [serviceId]: true }));
-        try {
-            const prompt = `You are a Senior Legacy Advisor at VESTRA ESTATES. Generate a concise, expert-level strategic primer on "${service.title}". The description is: "${service.description}". Focus on the key considerations, strategic benefits, and potential complexities relevant to an ultra-high-net-worth individual. The tone should be authoritative and insightful. Do not use markdown.`;
-            
-            const response = await fetch('/api/generate', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: prompt }] }] }),
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Failed to generate briefing');
-            }
-            
-            const data = await response.json();
-            const resultText = data.text;
-            setBriefings(prev => ({ ...prev, [serviceId]: resultText }));
-            briefingCache.set(cacheKey, resultText);
-        } catch (error: any) {
-            console.error("AI Briefing Error:", error);
-            const errorMessage = String(error.message);
-            if (errorMessage.includes('429') || errorMessage.includes('RESOURCE_EXHAUSTED')) {
-                setBriefings(prev => ({ ...prev, [serviceId]: t('widgets.errors.rateLimit') }));
-            } else {
-                setBriefings(prev => ({ ...prev, [serviceId]: "An error occurred while generating the briefing. Please try again." }));
-            }
-        } finally {
-            setLoading(prev => ({...prev, [serviceId]: false }));
-        }
-    };
-
-    const handleRequest = (service: WealthService) => {
-        onAddRequest({
-            type: 'Wealth Planning',
-            title: `Inquiry: ${service.title}`,
-            assignee: 'Senior Wealth Advisor',
-            status: 'Pending'
-        });
-        alert(`Your inquiry regarding ${service.title} has been submitted. A Senior Wealth Advisor will contact you shortly.`);
-    };
+const GenerationalWealthPage: React.FC<GenerationalWealthPageProps> = ({ onNavigate }) => {
+    const { t } = useLocalization();
+    const serviceCount = generationalWealthServices.length;
+    const angleStep = 360 / serviceCount;
 
     return (
-        <div className="p-4 md:p-8 h-full overflow-y-auto">
-            <header className="mb-12 text-center">
-                <div className="flex justify-center text-cyan-400 mb-4">
-                    <TreeIcon className="w-16 h-16" />
-                </div>
-                <h1 className="text-3xl md:text-4xl font-bold text-white">Generational Wealth Office</h1>
-                <p className="text-gray-400 max-w-2xl mx-auto mt-2">Strategic advisory for the preservation and growth of family legacy across generations.</p>
+        <div className="p-4 md:p-8 h-full flex flex-col justify-center items-center overflow-hidden">
+            <header className="text-center mb-8 md:mb-16 animate-fade-in-up">
+                <h1 className="text-3xl md:text-4xl font-bold text-white text-glow">Generational Wealth Office</h1>
+                <p className="text-gray-400 max-w-2xl mx-auto mt-2">Your strategic center for the preservation and growth of multi-generational legacy.</p>
             </header>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-                {generationalWealthServices.map(service => {
+            <div className="relative w-96 h-96 md:w-[500px] md:h-[500px] flex items-center justify-center">
+                {/* Central Hub */}
+                <div className="group absolute w-40 h-40 md:w-52 md:h-52 bg-[#111116] border-2 border-cyan-500/30 rounded-full flex flex-col items-center justify-center text-center p-4 shadow-2xl animate-pulse-glow">
+                    <TreeIcon className="w-10 h-10 md:w-12 md:h-12 text-cyan-400 mb-2 transition-transform duration-300 group-hover:scale-110" />
+                    <h2 className="font-bold text-lg md:text-xl text-white">Family Legacy</h2>
+                    <p className="text-xs text-gray-500">Core Services</p>
+                </div>
+
+                {/* Satellite Services */}
+                {generationalWealthServices.map((service, index) => {
+                    const angle = angleStep * index;
                     const Icon = iconMap[service.icon];
-                    const isExpanded = expandedService === service.id;
+                    const radius = 180; // md: 240
+                    const x = radius * Math.cos((angle - 90) * Math.PI / 180);
+                    const y = radius * Math.sin((angle - 90) * Math.PI / 180);
+
                     return (
-                        <div key={service.id} className="bg-[#111116]/60 border border-gray-800 rounded-xl shadow-lg flex flex-col transition-all duration-300 hover:bg-white/5 hover:border-cyan-500/30">
-                            <div className="p-6 text-center items-center flex flex-col flex-grow">
-                                <div className="flex-shrink-0 text-cyan-400 mb-4 bg-gray-900 p-4 rounded-full">
-                                    <Icon className="w-8 h-8" />
-                                </div>
-                                <h2 className="text-xl font-bold text-white">{service.title}</h2>
-                                <p className="text-gray-300 mt-2 flex-grow text-sm">{service.description}</p>
-                                <div className="mt-6 w-full flex flex-col gap-2">
-                                    <Button className="w-full" variant="ghost" onClick={() => handleToggleBriefing(service)}>
-                                        {isExpanded ? t('generationalOffice.wealth.hideBriefing') : t('generationalOffice.wealth.viewBriefing')}
-                                    </Button>
-                                    <Button className="w-full" onClick={() => handleRequest(service)}>Request Consultation</Button>
+                        <React.Fragment key={service.id}>
+                            {/* Connecting Line */}
+                            <div
+                                className="absolute top-1/2 left-1/2 h-0.5 bg-cyan-800/50 origin-left transition-all duration-500"
+                                style={{
+                                    width: `${radius}px`,
+                                    transform: `translate(0, -50%) rotate(${angle}deg)`,
+                                    animation: `draw-line 1s ${index * 0.1}s ease-out forwards`,
+                                }}
+                            ></div>
+                            <style>{`
+                                @keyframes draw-line {
+                                    from { width: 0; }
+                                    to { width: ${radius}px; }
+                                }
+                            `}</style>
+
+                            {/* Service Node */}
+                            <div
+                                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 group"
+                                style={{ transform: `translate(${x}px, ${y}px)` }}
+                            >
+                                <button
+                                    onClick={() => onNavigate(service.id)}
+                                    className="relative w-20 h-20 bg-[#111116] border-2 border-gray-700 rounded-full flex flex-col items-center justify-center text-center transition-all duration-300 hover:border-cyan-500 hover:scale-110 animate-fade-in"
+                                    style={{ animationDelay: `${0.5 + index * 0.1}s` }}
+                                >
+                                    <Icon className="w-7 h-7 text-cyan-400" />
+                                    <p className="text-xs text-white mt-1">{service.title}</p>
+                                </button>
+                                {/* Tooltip */}
+                                <div className="absolute bottom-full mb-2 w-48 p-2 bg-gray-900 border border-gray-700 rounded-md text-xs text-center text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none -translate-x-1/2 left-1/2">
+                                    {service.description}
                                 </div>
                             </div>
-                            {isExpanded && (
-                                <div className="border-t border-gray-700 bg-cyan-900/10 p-4">
-                                    {loading[service.id] && <div className="flex items-center gap-2 text-sm text-gray-400"><span className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></span><span>{t('generationalOffice.wealth.generatingBriefing')}</span></div>}
-                                    {briefings[service.id] && <p className="text-sm text-gray-300 whitespace-pre-wrap font-mono">{briefings[service.id]}</p>}
-                                </div>
-                            )}
-                        </div>
+                        </React.Fragment>
                     );
                 })}
             </div>

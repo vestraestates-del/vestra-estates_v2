@@ -222,15 +222,15 @@ const App: React.FC = () => {
 
     const renderPage = () => {
         if (activePage.startsWith('generational-')) {
-            const subPage = activePage.split('-')[1];
+            const subPage = activePage.split('generational-')[1];
             switch (subPage) {
-                case 'wealth': return <GenerationalWealthPage onAddRequest={handleAddRequest} />;
+                case 'wealth': return <GenerationalWealthPage onNavigate={(page) => setActivePage(`generational-${page}`)} />;
                 case 'family-office': return <FamilyOfficePage onAddRequest={handleAddRequest} onOpenBlueprintModal={() => setIsFamilyOfficeBlueprintModalOpen(true)} />;
                 case 'succession-planning': return <SuccessionPlanningPage onAddRequest={handleAddRequest} />;
                 case 'passion-assets': return <PassionAssetPage collections={managedCollectionSummary} onInitiateService={(title) => handleAddRequest({ type: 'Action', title: `Initiate Service: ${title}`, assignee: 'Specialist Advisor', status: 'Pending' })} />;
                 case 'aviation-yachting': return <AviationYachtingPage assets={fleetAssets} onInitiateService={(title) => handleAddRequest({ type: 'Action', title: `Engage Service: ${title}`, assignee: 'Aviation/Yachting Desk', status: 'Pending' })} />;
                 case 'digital-vault': return <DigitalVaultPage />;
-                default: return <GenerationalWealthPage onAddRequest={handleAddRequest} />;
+                default: return <GenerationalWealthPage onNavigate={(page) => setActivePage(`generational-${page}`)} />;
             }
         }
 
@@ -275,7 +275,7 @@ const App: React.FC = () => {
         <LocalizationProvider>
             <CurrencyProvider>
                 <div className="flex h-screen w-screen bg-black text-white overflow-hidden">
-                    <Sidebar activePage={activePage} onNavigate={setActivePage} onLogout={handleLogout} user={user} logoConfig={logoConfig} onGenerationalOfficeNav={(page) => setActivePage(`generational-${page}`)} />
+                    <Sidebar activePage={activePage} onNavigate={setActivePage} onLogout={handleLogout} user={user} logoConfig={logoConfig} />
                     <main className="flex-1 overflow-y-auto bg-gray-900 bg-cover bg-center" style={{ backgroundImage: "url('/grid-bg.svg')"}}>
                         <Suspense fallback={<div className="p-8">Loading...</div>}>
                             {renderPage()}
