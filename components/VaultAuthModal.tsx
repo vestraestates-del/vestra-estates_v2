@@ -31,7 +31,7 @@ const VaultAuthModal: React.FC<VaultAuthModalProps> = ({ onClose, onVerified }) 
     };
 
     return (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-lg z-[60] flex items-center justify-center animate-fade-in" onClick={onClose}>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-lg z-[60] flex items-center justify-center animate-fade-in overscroll-contain" onClick={onClose}>
             <div className="bg-[#0c0c10] border border-gray-800 rounded-2xl shadow-2xl w-full max-w-sm flex flex-col p-8 text-center" onClick={e => e.stopPropagation()}>
                 <h2 className="text-xl font-bold text-white">{t('generationalOffice.vaultAuth.title')}</h2>
                 <p className="text-sm text-gray-400 mt-2">{t('generationalOffice.vaultAuth.prompt')}</p>

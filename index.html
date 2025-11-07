@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#000000" />
     <title>VESTRA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Leaflet CSS for interactive map -->
@@ -21,57 +23,42 @@
         }
 
         /* Animations */
-        @keyframes fade-in {
-            from { opacity: 0; transform: scale(0.98); }
-            to { opacity: 1; transform: scale(1); }
-        }
+        @-webkit-keyframes fade-in { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+        @keyframes fade-in { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
         .animate-fade-in {
+            -webkit-animation: fade-in 0.5s ease-out forwards;
             animation: fade-in 0.5s ease-out forwards;
         }
 
-        @keyframes fade-in-up {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @-webkit-keyframes fade-in-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fade-in-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade-in-up {
+            -webkit-animation: fade-in-up 0.5s ease-out forwards;
             animation: fade-in-up 0.5s ease-out forwards;
         }
         
-        @keyframes pulse-glow {
-            0%, 100% { 
-                box-shadow: 0 0 10px 0px rgba(0, 255, 255, 0.5), 0 0 20px 0px rgba(0, 255, 255, 0.3);
-            }
-            50% { 
-                box-shadow: 0 0 20px 5px rgba(0, 255, 255, 0.7), 0 0 40px 10px rgba(0, 255, 255, 0.5);
-            }
-        }
+        @-webkit-keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 10px 0px rgba(0, 255, 255, 0.5), 0 0 20px 0px rgba(0, 255, 255, 0.3); } 50% { box-shadow: 0 0 20px 5px rgba(0, 255, 255, 0.7), 0 0 40px 10px rgba(0, 255, 255, 0.5); } }
+        @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 10px 0px rgba(0, 255, 255, 0.5), 0 0 20px 0px rgba(0, 255, 255, 0.3); } 50% { box-shadow: 0 0 20px 5px rgba(0, 255, 255, 0.7), 0 0 40px 10px rgba(0, 255, 255, 0.5); } }
         .animate-pulse-glow {
+            -webkit-animation: pulse-glow 3s infinite ease-in-out;
             animation: pulse-glow 3s infinite ease-in-out;
         }
         
-        @keyframes slow-pulse-glow {
-            0%, 100% { 
-                box-shadow: 0 0 8px 0px rgba(0, 255, 255, 0.4), 0 0 12px 0px rgba(0, 255, 255, 0.2);
-                opacity: 0.7;
-            }
-            50% { 
-                box-shadow: 0 0 15px 3px rgba(0, 255, 255, 0.6), 0 0 25px 5px rgba(0, 255, 255, 0.4);
-                opacity: 1;
-            }
-        }
+        @-webkit-keyframes slow-pulse-glow { 0%, 100% { box-shadow: 0 0 8px 0px rgba(0, 255, 255, 0.4), 0 0 12px 0px rgba(0, 255, 255, 0.2); opacity: 0.7; } 50% { box-shadow: 0 0 15px 3px rgba(0, 255, 255, 0.6), 0 0 25px 5px rgba(0, 255, 255, 0.4); opacity: 1; } }
+        @keyframes slow-pulse-glow { 0%, 100% { box-shadow: 0 0 8px 0px rgba(0, 255, 255, 0.4), 0 0 12px 0px rgba(0, 255, 255, 0.2); opacity: 0.7; } 50% { box-shadow: 0 0 15px 3px rgba(0, 255, 255, 0.6), 0 0 25px 5px rgba(0, 255, 255, 0.4); opacity: 1; } }
         .animate-slow-pulse-glow {
+            -webkit-animation: slow-pulse-glow 4s infinite ease-in-out;
             animation: slow-pulse-glow 4s infinite ease-in-out;
         }
         
-        @keyframes thinking-dots {
-            0%, 20% { transform: scale(1); }
-            50% { transform: scale(1.5); }
-        }
+        @-webkit-keyframes thinking-dots { 0%, 20% { transform: scale(1); } 50% { transform: scale(1.5); } }
+        @keyframes thinking-dots { 0%, 20% { transform: scale(1); } 50% { transform: scale(1.5); } }
         .dot-flashing div {
+            -webkit-animation: thinking-dots 1.2s infinite ease-in-out;
             animation: thinking-dots 1.2s infinite ease-in-out;
         }
-        .dot-flashing div:nth-child(2) { animation-delay: 0.2s; }
-        .dot-flashing div:nth-child(3) { animation-delay: 0.4s; }
+        .dot-flashing div:nth-child(2) { -webkit-animation-delay: 0.2s; animation-delay: 0.2s; }
+        .dot-flashing div:nth-child(3) { -webkit-animation-delay: 0.4s; animation-delay: 0.4s; }
 
         .text-glow {
             text-shadow: 0 0 10px rgba(6, 182, 212, 0.7);
@@ -91,70 +78,41 @@
             border-color: #06b6d4;
         }
 
-        @keyframes pulse-marker {
-            0% {
-                transform: scale(0.9);
-                box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.7);
-            }
-            70% {
-                transform: scale(1);
-                box-shadow: 0 0 0 10px rgba(6, 182, 212, 0);
-            }
-            100% {
-                transform: scale(0.9);
-                box-shadow: 0 0 0 0 rgba(6, 182, 212, 0);
-            }
-        }
+        @-webkit-keyframes pulse-marker { 0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(6, 182, 212, 0); } 100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(6, 182, 212, 0); } }
+        @keyframes pulse-marker { 0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(6, 182, 212, 0); } 100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(6, 182, 212, 0); } }
         .pulsing-marker {
             background-color: #06b6d4;
             border-radius: 50%;
             border: 2px solid #fff;
+            -webkit-animation: pulse-marker 1.5s infinite;
             animation: pulse-marker 1.5s infinite;
         }
 
-        @keyframes highlight-card {
-            0% { background-color: rgba(6, 182, 212, 0); }
-            50% { background-color: rgba(6, 182, 212, 0.2); }
-            100% { background-color: rgba(6, 182, 212, 0); }
-        }
+        @-webkit-keyframes highlight-card { 0% { background-color: rgba(6, 182, 212, 0); } 50% { background-color: rgba(6, 182, 212, 0.2); } 100% { background-color: rgba(6, 182, 212, 0); } }
+        @keyframes highlight-card { 0% { background-color: rgba(6, 182, 212, 0); } 50% { background-color: rgba(6, 182, 212, 0.2); } 100% { background-color: rgba(6, 182, 212, 0); } }
         .animate-highlight {
+            -webkit-animation: highlight-card 1.5s ease-in-out;
             animation: highlight-card 1.5s ease-in-out;
         }
         
         /* Showcase Animations */
-        @keyframes ken-burns {
-            0% {
-                transform: scale(1.05) translate(1%, -2%);
-                opacity: 0;
-            }
-            5% {
-                opacity: 1;
-            }
-            95% {
-                opacity: 1;
-            }
-            100% {
-                transform: scale(1.15) translate(-1%, 2%);
-                opacity: 0;
-            }
-        }
+        @-webkit-keyframes ken-burns { 0% { transform: scale(1.05) translate(1%, -2%); opacity: 0; } 5% { opacity: 1; } 95% { opacity: 1; } 100% { transform: scale(1.15) translate(-1%, 2%); opacity: 0; } }
+        @keyframes ken-burns { 0% { transform: scale(1.05) translate(1%, -2%); opacity: 0; } 5% { opacity: 1; } 95% { opacity: 1; } 100% { transform: scale(1.15) translate(-1%, 2%); opacity: 0; } }
         .animate-ken-burns {
+            -webkit-animation: ken-burns 20s ease-in-out forwards;
             animation: ken-burns 20s ease-in-out forwards;
         }
-        @keyframes text-fade-in-up {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @-webkit-keyframes text-fade-in-up { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes text-fade-in-up { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         .animate-text-fade-in-up {
+            -webkit-animation: text-fade-in-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
             animation: text-fade-in-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
             opacity: 0;
         }
 
         /* Logo Shimmer Animation */
-        @keyframes logo-shimmer {
-            0% { transform: translateX(-100%) skewX(-15deg); }
-            100% { transform: translateX(200%) skewX(-15deg); }
-        }
+        @-webkit-keyframes logo-shimmer { 0% { transform: translateX(-100%) skewX(-15deg); } 100% { transform: translateX(200%) skewX(-15deg); } }
+        @keyframes logo-shimmer { 0% { transform: translateX(-100%) skewX(-15deg); } 100% { transform: translateX(200%) skewX(-15deg); } }
         .animate-logo-shimmer {
             position: relative;
             overflow: hidden;
@@ -168,10 +126,13 @@
             width: 50%;
             height: 100%;
             background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0) 100%);
+            -webkit-animation: logo-shimmer 5s infinite;
             animation: logo-shimmer 5s infinite;
+            -webkit-animation-delay: 3s;
             animation-delay: 3s;
         }
     </style>
+<script async src="https://ga.jspm.io/npm:es-module-shims@1.10.0/dist/es-module-shims.js"></script>
 <script type="importmap">
 {
   "imports": {

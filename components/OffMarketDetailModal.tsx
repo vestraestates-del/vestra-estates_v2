@@ -124,14 +124,15 @@ const OffMarketDetailModal: React.FC<OffMarketDetailModalProps> = ({ property, o
                 setAnalyses(prev => ({ ...prev, [tab]: resultText }));
                 analysisCache.set(cacheKey, resultText);
 
-            } catch (err: any) {
+            } catch (err) {
                 console.error(`AI analysis error for tab ${tab}:`, err);
-                const errorMessage = String(err.message);
-                if (errorMessage.includes('429') || errorMessage.includes('RESOURCE_EXHAUSTED')) {
-                    setErrors(prev => ({ ...prev, [tab]: t('widgets.errors.rateLimit') }));
-                } else {
-                    setErrors(prev => ({ ...prev, [tab]: t('widgets.aiEvaluation.error') }));
+                let errorMessage = t('widgets.aiEvaluation.error');
+                if (err instanceof Error) {
+                    if (err.message.includes('429') || err.message.includes('RESOURCE_EXHAUSTED')) {
+                        errorMessage = t('widgets.errors.rateLimit');
+                    }
                 }
+                setErrors(prev => ({ ...prev, [tab]: errorMessage }));
             } finally {
                 setLoading(prev => ({ ...prev, [tab]: false }));
             }
@@ -146,8 +147,33 @@ const OffMarketDetailModal: React.FC<OffMarketDetailModalProps> = ({ property, o
     
     // --- Video and Image Handlers (adapted from PropertyDetailModal) ---
     const showControlsAndSetHideTimer = () => { setShowControls(true); if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current); controlsTimeoutRef.current = window.setTimeout(() => { if (videoRef.current && !videoRef.current.paused) setShowControls(false); }, 3000); };
-    const toggleFullScreen = () => { const container = videoContainerRef.current; if (!container) return; if (!document.fullscreenElement) container.requestFullscreen(); else if (document.exitFullscreen) document.exitFullscreen(); };
-    useEffect(() => { const handleFullScreenChange = () => setIsFullscreen(!!document.fullscreenElement); document.addEventListener('fullscreenchange', handleFullScreenChange); return () => document.removeEventListener('fullscreenchange', handleFullScreenChange); }, []);
+    const toggleFullScreen = () => { 
+        const container = videoContainerRef.current;
+        if (!container) return;
+        const isDocFullscreen = document.fullscreenElement || (document as any).webkitFullscreenElement;
+        if (!isDocFullscreen) {
+            if (container.requestFullscreen) {
+                container.requestFullscreen().catch(err => console.error(err));
+            } else if ((container as any).webkitRequestFullscreen) {
+                (container as any).webkitRequestFullscreen();
+            }
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if ((document as any).webkitExitFullscreen) {
+                (document as any).webkitExitFullscreen();
+            }
+        }
+    };
+    useEffect(() => { 
+        const handleFullScreenChange = () => setIsFullscreen(!!(document.fullscreenElement || (document as any).webkitFullscreenElement));
+        document.addEventListener('fullscreenchange', handleFullScreenChange); 
+        document.addEventListener('webkitfullscreenchange', handleFullScreenChange);
+        return () => {
+            document.removeEventListener('fullscreenchange', handleFullScreenChange);
+            document.removeEventListener('webkitfullscreenchange', handleFullScreenChange);
+        };
+    }, []);
     useEffect(() => { if (mainMedia.type === 'video') { setProgress(0); showControlsAndSetHideTimer(); } else { setZoom(1); setPosition({ x: 50, y: 50 }); } }, [mainMedia.url, mainMedia.type]);
     useEffect(() => { return () => { if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current); }; }, []);
     const handlePlayPause = () => { if (videoRef.current) isPlaying ? videoRef.current.pause() : videoRef.current.play(); };
@@ -172,7 +198,7 @@ const OffMarketDetailModal: React.FC<OffMarketDetailModalProps> = ({ property, o
     const tabs = [{ id: 'investment' as AnalysisTab, label: 'Investment Evaluation', icon: <TrendingUpIcon className="w-4 h-4" /> },{ id: 'tax' as AnalysisTab, label: 'Tax Analysis', icon: <BriefcaseIcon className="w-4 h-4" /> },{ id: 'insurance' as AnalysisTab, label: 'Insurance Advisory', icon: <ShieldCheckIcon className="w-4 h-4" /> }];
 
     return (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-lg z-50 flex items-center justify-center animate-fade-in" onClick={onClose}>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-lg z-50 flex items-center justify-center animate-fade-in overscroll-contain" onClick={onClose}>
             <div className="bg-[#0c0c10] border border-gray-800 rounded-2xl shadow-2xl w-full max-w-6xl h-[90vh] flex flex-col overflow-hidden" onClick={e => e.stopPropagation()}>
                 <div className="flex-shrink-0 p-4 border-b border-gray-800 flex justify-between items-center"><h2 className="text-xl font-bold text-cyan-400">{property.codename}</h2><button onClick={onClose} className="p-2 rounded-full text-gray-500 hover:bg-white/10 hover:text-white"><CloseIcon className="w-6 h-6" /></button></div>
                 <div className="flex-1 flex flex-col md:flex-row overflow-y-auto">

@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from 'react';
 import type { AgendaItem } from '../data/appData.ts';
 import { CloseIcon } from './icons/EliteIcons.tsx';
@@ -51,7 +49,7 @@ const AgendaItemModal: React.FC<AgendaItemModalProps> = ({ item, onSave, onClose
     const title = item ? 'Edit Agenda Item' : 'Add New Agenda Item';
 
     return (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-lg z-50 flex items-center justify-center animate-fade-in" onClick={onClose}>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-lg z-50 flex items-center justify-center animate-fade-in overscroll-contain" onClick={onClose}>
             <div className="bg-[#0c0c10] border border-gray-800 rounded-2xl shadow-2xl w-full max-w-lg flex flex-col" onClick={e => e.stopPropagation()}>
                 <div className="flex-shrink-0 p-4 border-b border-gray-800 flex justify-between items-center">
                     <h2 className="text-xl font-bold text-white">{title}</h2>

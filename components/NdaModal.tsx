@@ -69,14 +69,15 @@ const NdaModal: React.FC<NdaModalProps> = ({ property, onConfirm, onClose }) => 
                 setNdaText(resultText);
                 ndaCache.set(cacheKey, resultText);
 
-            } catch (err: any) {
+            } catch (err) {
                 console.error("NDA generation error:", err);
-                const errorMessage = String(err.message);
-                if (errorMessage.includes('429') || errorMessage.includes('RESOURCE_EXHAUSTED')) {
-                    setError(t('widgets.errors.rateLimit'));
-                } else {
-                    setError('Failed to generate the NDA. Please try again.');
+                let errorMessage = 'Failed to generate the NDA. Please try again.';
+                if (err instanceof Error) {
+                    if (err.message.includes('429') || err.message.includes('RESOURCE_EXHAUSTED')) {
+                        errorMessage = t('widgets.errors.rateLimit');
+                    }
                 }
+                setError(errorMessage);
             } finally {
                 setLoading(false);
             }
@@ -88,7 +89,7 @@ const NdaModal: React.FC<NdaModalProps> = ({ property, onConfirm, onClose }) => 
     const canSubmit = signature.trim() !== '' && agreed && !loading;
 
     return (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-lg z-[60] flex items-center justify-center animate-fade-in" onClick={onClose}>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-lg z-[60] flex items-center justify-center animate-fade-in overscroll-contain" onClick={onClose}>
             <div className="bg-[#0c0c10] border border-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl flex flex-col h-[90vh]" onClick={e => e.stopPropagation()}>
                 <div className="flex-shrink-0 p-4 border-b border-gray-800 flex justify-between items-center">
                     <div>

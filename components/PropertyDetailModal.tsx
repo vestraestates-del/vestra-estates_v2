@@ -1,6 +1,3 @@
-
-
-
 import React, { useState, useMemo, useRef, useEffect, lazy, Suspense } from 'react';
 import type { PortfolioItem } from '../data/portfolioData.ts';
 import { CloseIcon, MapPinIcon, CheckSquareIcon, DollarSignIcon, PlayCircleIcon, ShareIcon, CheckIcon, PlayIcon, PauseIcon, VolumeMuteIcon, VolumeLowIcon, VolumeHighIcon, MaximizeIcon, MinimizeIcon, ThreeDIcon, PlusCircleIcon, LockClosedIcon, PencilSquareIcon } from './icons/EliteIcons.tsx';
@@ -109,26 +106,35 @@ const PropertyDetailModal: React.FC<PropertyDetailModalProps> = ({ property, onC
     const container = videoContainerRef.current;
     if (!container) return;
 
-    if (!document.fullscreenElement) {
-      container.requestFullscreen().catch(err => {
-        alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
-      });
+    const isDocFullscreen = document.fullscreenElement || (document as any).webkitFullscreenElement;
+
+    if (!isDocFullscreen) {
+        if (container.requestFullscreen) {
+            container.requestFullscreen().catch(err => console.error(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`));
+        } else if ((container as any).webkitRequestFullscreen) { // Safari
+            (container as any).webkitRequestFullscreen();
+        }
     } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      }
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if ((document as any).webkitExitFullscreen) { // Safari
+            (document as any).webkitExitFullscreen();
+        }
     }
   };
 
   useEffect(() => {
     const handleFullScreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
+        const isCurrentlyFullscreen = !!(document.fullscreenElement || (document as any).webkitFullscreenElement);
+        setIsFullscreen(isCurrentlyFullscreen);
     };
 
     document.addEventListener('fullscreenchange', handleFullScreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullScreenChange); // For Safari
     
     return () => {
       document.removeEventListener('fullscreenchange', handleFullScreenChange);
+      document.removeEventListener('webkitfullscreenchange', handleFullScreenChange);
     };
   }, []);
 
@@ -413,7 +419,7 @@ const PropertyDetailModal: React.FC<PropertyDetailModalProps> = ({ property, onC
   return (
     <>
       <div 
-        className="fixed inset-0 bg-black/80 backdrop-blur-lg z-50 flex items-center justify-center animate-fade-in"
+        className="fixed inset-0 bg-black/80 backdrop-blur-lg z-50 flex items-center justify-center animate-fade-in overscroll-contain"
         onClick={onClose}
       >
         <div 

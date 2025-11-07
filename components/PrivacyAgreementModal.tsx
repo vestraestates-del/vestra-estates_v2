@@ -27,7 +27,7 @@ const PrivacyAgreementModal: React.FC<PrivacyAgreementModalProps> = ({ user, onC
     };
 
     return (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-lg z-[60] flex items-center justify-center animate-fade-in" onClick={onClose}>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-lg z-[60] flex items-center justify-center animate-fade-in overscroll-contain" onClick={onClose}>
             <div className="bg-[#0c0c10] border border-gray-800 rounded-2xl shadow-2xl w-full max-w-3xl flex flex-col h-[90vh]" onClick={e => e.stopPropagation()}>
                 <div className="flex-shrink-0 p-4 border-b border-gray-800 flex justify-between items-center">
                     <h2 className="text-xl font-bold text-white">VESTRA ESTATES - PRIVACY AGREEMENT</h2>

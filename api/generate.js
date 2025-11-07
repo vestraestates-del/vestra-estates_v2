@@ -16,16 +16,27 @@ export default async function handler(req, res) {
   const API_KEY = process.env.API_KEY;
   if (!API_KEY) {
     console.error('API_KEY environment variable is not set on the server.');
-    return res.status(500).json({ error: 'API key is not configured.' });
+    return res.status(500).json({ error: 'API key is not configured on the server.' });
   }
 
   try {
     const ai = new GoogleGenAI({ apiKey: API_KEY });
 
+    // Sanitize config from client to only allow specific keys
+    const allowedConfigKeys = ['systemInstruction', 'responseMimeType', 'responseSchema', 'responseModalities', 'speechConfig'];
+    const filteredConfig = {};
+    if (config) {
+      for (const key of allowedConfigKeys) {
+        if (config[key] !== undefined) {
+          filteredConfig[key] = config[key];
+        }
+      }
+    }
+
     const requestPayload = {
       model: model || 'gemini-2.5-flash', // Default to flash if not provided
       contents,
-      ...(config && { config })
+      ...(Object.keys(filteredConfig).length > 0 && { config: filteredConfig })
     };
     
     const response = await ai.models.generateContent(requestPayload);
@@ -54,9 +65,9 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error('Error calling Google GenAI:', error);
+    // Return a generic error to the client for security
     res.status(500).json({ 
-        error: 'An internal server error occurred while contacting the AI service.',
-        details: error.message 
+        error: 'An internal server error occurred while contacting the AI service.'
     });
   }
 }

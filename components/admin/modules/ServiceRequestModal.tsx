@@ -35,7 +35,7 @@ const ServiceRequestModal: React.FC<ServiceRequestModalProps> = ({ request, onCl
     }
 
     return (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-lg z-50 flex items-center justify-center" onClick={onClose}>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-lg z-50 flex items-center justify-center overscroll-contain" onClick={onClose}>
             <div className="bg-[#0c0c10] border border-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl flex flex-col" onClick={e => e.stopPropagation()}>
                 <div className="p-4 border-b border-gray-800 flex justify-between items-center">
                     <h2 className="text-xl font-bold text-white">{request?.id ? 'Edit' : 'Create'} Service Request</h2>

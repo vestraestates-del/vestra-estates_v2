@@ -176,13 +176,17 @@ const MarketIntelligencePage: React.FC<MarketIntelligencePageProps> = ({ user, o
             if (!response.ok) throw new Error('Failed to generate briefing');
             
             const data = await response.json();
-            const resultText = data.text;
-            setBriefings(prev => ({ ...prev, [report.id]: { text: resultText, loading: false, error: '' } }));
-            briefingCache.set(cacheKey, resultText);
+            // FIX: Safely validate that 'data.text' is a string before using it to prevent type errors.
+            if (data && typeof data.text === 'string') {
+                const resultText = data.text;
+                setBriefings(prev => ({ ...prev, [report.id]: { text: resultText, loading: false, error: '' } }));
+                briefingCache.set(cacheKey, resultText);
+            } else {
+                throw new Error("Received an invalid response from the AI service.");
+            }
         } catch (error) {
             console.error("AI briefing error:", error);
             let errorMessage = t('widgets.aiEvaluation.error');
-            // FIX: The 'error' object in a catch block is of type 'unknown'. Added 'instanceof Error' type guard to safely access properties on the 'error' object.
             if (error instanceof Error) {
                 if (error.message.includes('429') || error.message.includes('RESOURCE_EXHAUSTED')) {
                     errorMessage = t('widgets.errors.rateLimit');

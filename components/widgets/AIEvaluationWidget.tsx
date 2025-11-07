@@ -79,14 +79,15 @@ const AIEvaluationWidget: React.FC<AIEvaluationWidgetProps> = ({ property }) => 
         setEvaluation(resultText);
         evaluationCache.set(cacheKey, resultText);
 
-      } catch (err: any) {
+      } catch (err) {
         console.error("AI evaluation error:", err);
-        const errorMessage = String(err.message);
-        if (errorMessage.includes('429') || errorMessage.includes('RESOURCE_EXHAUSTED')) {
-          setError(t('widgets.errors.rateLimit'));
-        } else {
-          setError(t('widgets.aiEvaluation.error'));
+        let errorMessage = t('widgets.aiEvaluation.error');
+        if (err instanceof Error) {
+            if (err.message.includes('429') || err.message.includes('RESOURCE_EXHAUSTED')) {
+                errorMessage = t('widgets.errors.rateLimit');
+            }
         }
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }

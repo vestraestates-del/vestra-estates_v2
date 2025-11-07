@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { CloseIcon } from '../../icons/EliteIcons';
-import Button from '../../ui/Button';
-import { BlogPost } from '../../../data/blogData';
+import { CloseIcon } from '../../icons/EliteIcons.tsx';
+import Button from '../../ui/Button.tsx';
+import { BlogPost } from '../../../data/blogData.ts';
 
 interface BlogEditorModalProps {
     post: Partial<BlogPost> | null;
@@ -23,7 +23,7 @@ const BlogEditorModal: React.FC<BlogEditorModalProps> = ({ post, onClose, onSave
     };
 
     return (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-lg z-50 flex items-center justify-center animate-fade-in" onClick={onClose}>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-lg z-50 flex items-center justify-center animate-fade-in overscroll-contain" onClick={onClose}>
             <div className="bg-[#0c0c10] border border-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl flex flex-col h-[80vh]" onClick={e => e.stopPropagation()}>
                 <div className="flex-shrink-0 p-4 border-b border-gray-800 flex justify-between items-center">
                     <h2 className="text-xl font-bold text-white">{post?.id ? 'Edit' : 'Create'} Article</h2>

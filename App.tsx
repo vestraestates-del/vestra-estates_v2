@@ -154,11 +154,16 @@ const App: React.FC = () => {
             setShowMfaModal(true);
         } else {
             // For other users, check for privacy agreement
-            // In a real app, this flag would be stored in the DB
-            if (localStorage.getItem(`privacy_agreed_${email}`) !== 'true') {
-                setTempLoginInfo({ user: loggedInUser, email });
-                setShowPrivacyAgreement(true);
-            } else {
+            try {
+                if (localStorage.getItem(`privacy_agreed_${email}`) !== 'true') {
+                    setTempLoginInfo({ user: loggedInUser, email });
+                    setShowPrivacyAgreement(true);
+                } else {
+                    setUser(loggedInUser);
+                }
+            } catch (error) {
+                console.error("Could not access localStorage:", error);
+                // Fallback for when localStorage is disabled, log user in directly.
                 setUser(loggedInUser);
             }
         }
@@ -167,10 +172,17 @@ const App: React.FC = () => {
     const handleMfaVerify = (code: string) => {
         // Mock verification
         if (code === '123456' && tempLoginInfo) {
-             if (localStorage.getItem(`privacy_agreed_${tempLoginInfo.email}`) !== 'true') {
-                setShowMfaModal(false);
-                setShowPrivacyAgreement(true);
-            } else {
+             try {
+                if (localStorage.getItem(`privacy_agreed_${tempLoginInfo.email}`) !== 'true') {
+                    setShowMfaModal(false);
+                    setShowPrivacyAgreement(true);
+                } else {
+                    setUser(tempLoginInfo.user);
+                    setShowMfaModal(false);
+                    setTempLoginInfo(null);
+                }
+            } catch (error) {
+                console.error("Could not access localStorage:", error);
                 setUser(tempLoginInfo.user);
                 setShowMfaModal(false);
                 setTempLoginInfo(null);
@@ -181,11 +193,21 @@ const App: React.FC = () => {
     };
 
     const handlePrivacyAgreement = () => {
-        if (tempLoginInfo) {
-            localStorage.setItem(`privacy_agreed_${tempLoginInfo.email}`, 'true');
-            setUser(tempLoginInfo.user);
-            setShowPrivacyAgreement(false);
-            setTempLoginInfo(null);
+        try {
+            if (tempLoginInfo) {
+                localStorage.setItem(`privacy_agreed_${tempLoginInfo.email}`, 'true');
+                setUser(tempLoginInfo.user);
+                setShowPrivacyAgreement(false);
+                setTempLoginInfo(null);
+            }
+        } catch (error) {
+            console.error("Could not access localStorage:", error);
+            // Proceed with login even if localStorage fails
+            if (tempLoginInfo) {
+                setUser(tempLoginInfo.user);
+                setShowPrivacyAgreement(false);
+                setTempLoginInfo(null);
+            }
         }
     };
     
