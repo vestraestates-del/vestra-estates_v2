@@ -39,6 +39,8 @@ const MembershipTiersPage = lazy(() => import('./components/MembershipTiersPage.
 const PrivacyAgreementModal = lazy(() => import('./components/PrivacyAgreementModal.tsx'));
 const MfaModal = lazy(() => import('./components/MfaModal.tsx'));
 const OffMarketDetailModal = lazy(() => import('./components/OffMarketDetailModal.tsx'));
+const CuratedAssetDossierModal = lazy(() => import('./components/CuratedAssetDossierModal.tsx'));
+
 
 // Data
 import { initialPortfolioItems, PortfolioItem } from './data/portfolioData.ts';
@@ -73,6 +75,8 @@ export interface BackgroundImages {
     evening: string;
     night: string;
 }
+export type AnyCuratedAsset = ArtItem | WatchItem | AutomobileItem | JewelItem | WineItem;
+
 
 const defaultLogoConfig: LogoConfig = {
     type: 'image',
@@ -115,6 +119,7 @@ const App: React.FC = () => {
     // Modal State
     const [selectedProperty, setSelectedProperty] = useState<PortfolioItem | null>(null);
     const [selectedOffMarketProperty, setSelectedOffMarketProperty] = useState<OffMarketProperty | null>(null);
+    const [selectedCuratedAsset, setSelectedCuratedAsset] = useState<AnyCuratedAsset | null>(null);
     const [isGhostBidModalOpen, setIsGhostBidModalOpen] = useState(false);
     const [mandateForGhostBid, setMandateForGhostBid] = useState<MandateItem | null>(null);
     const [isPrivateDeskModalOpen, setIsPrivateDeskModalOpen] = useState(false);
@@ -238,7 +243,7 @@ const App: React.FC = () => {
             case 'dashboard': return <Dashboard portfolioItems={portfolioItems} onOpenPropertyDetail={setSelectedProperty} agendaItems={agendaItems} onToggleComplete={handleToggleAgendaComplete} onSaveAgenda={handleSaveAgenda} onDeleteAgenda={handleDeleteAgenda} requestItems={requestItems} userType={user!.type} onAddRequest={handleAddRequest} onUpdateRequest={handleUpdateRequest} />;
             case 'asset-management': return <AssetManagementPage portfolioItems={portfolioItems} onOpenPropertyDetail={setSelectedProperty} />;
             case 'services': return <ServicesPage onAddRequest={handleAddRequest} />;
-            case 'curators-room': return <CuratorsRoom artCollection={artCollection} watchCollection={watchCollection} automobileCollection={automobileCollection} jewelCollection={jewelCollection} wineCollection={wineCollection} />;
+            case 'curators-room': return <CuratorsRoom artCollection={artCollection} watchCollection={watchCollection} automobileCollection={automobileCollection} jewelCollection={jewelCollection} wineCollection={wineCollection} onOpenDossier={setSelectedCuratedAsset} />;
             case 'circle': return <CirclePage members={circleMembers.filter(m => m.email !== user?.email)} onOpenChat={setChattingWith} unreadMessages={unreadMessages} />;
             case 'mandates': return <AcquisitionMandatesPage mandates={mandates} onSaveOrUpdateMandate={handleSaveOrUpdateMandate} onOpenGhostBidModal={handleOpenGhostBidModal} />;
             case 'off-market': return <OffMarketIntelligencePage properties={offMarketProperties} onOpenDetail={setSelectedOffMarketProperty} />;
@@ -248,7 +253,7 @@ const App: React.FC = () => {
             case 'private-desk': return <PrivateDeskPage user={user!} onOpenRequestModal={(type) => { setPrivateDeskRequestType(type); setIsPrivateDeskModalOpen(true); }} onNavigate={setActivePage} onOpenChat={setChattingWith} privateDeskMember={circleMembers.find(m => m.email === 'admin@vestra.com')!} />;
             case 'philanthropy': return <PhilanthropyBoardPage projects={initialPhilanthropyProjects} onAddRequest={handleAddRequest} />;
             case 'design-studio': return <DesignStudioPage onAddRequest={handleAddRequest} />;
-            case 'admin': return user?.type === 'admin' ? <AdminPage portfolioItems={portfolioItems} setPortfolioItems={setPortfolioItems} offMarketProperties={offMarketProperties} setOffMarketProperties={setOffMarketProperties} artCollection={artCollection} setArtCollection={setArtCollection} watchCollection={watchCollection} setWatchCollection={setWatchCollection} automobileCollection={automobileCollection} setAutomobileCollection={setAutomobileCollection} jewelCollection={jewelCollection} setJewelCollection={setJewelCollection} wineCollection={wineCollection} setWineCollection={setWineCollection} onSaveBranding={handleSaveBranding} currentLogo={logoConfig} currentBgs={backgroundImages} currentUserEmail={user.email} /> : <Dashboard portfolioItems={portfolioItems} onOpenPropertyDetail={setSelectedProperty} agendaItems={agendaItems} onToggleComplete={handleToggleAgendaComplete} onSaveAgenda={handleSaveAgenda} onDeleteAgenda={handleDeleteAgenda} requestItems={requestItems} userType={user!.type} onAddRequest={handleAddRequest} onUpdateRequest={handleUpdateRequest} />;
+            case 'admin': return user?.type === 'admin' ? <AdminPage portfolioItems={portfolioItems} setPortfolioItems={setPortfolioItems} offMarketProperties={offMarketProperties} setOffMarketProperties={setOffMarketProperties} artCollection={artCollection} setArtCollection={setArtCollection} watchCollection={watchCollection} setWatchCollection={setWatchCollection} automobileCollection={automobileCollection} setAutomobileCollection={setAutomobileCollection} jewelCollection={jewelCollection} setJewelCollection={setJewelCollection} wineCollection={wineCollection} setWineCollection={setWineCollection} onSaveBranding={handleSaveBranding} currentLogo={logoConfig} currentBgs={backgroundImages} currentUserEmail={user.email} requestItems={requestItems} setRequestItems={setRequestItems} /> : <Dashboard portfolioItems={portfolioItems} onOpenPropertyDetail={setSelectedProperty} agendaItems={agendaItems} onToggleComplete={handleToggleAgendaComplete} onSaveAgenda={handleSaveAgenda} onDeleteAgenda={handleDeleteAgenda} requestItems={requestItems} userType={user!.type} onAddRequest={handleAddRequest} onUpdateRequest={handleUpdateRequest} />;
             default: return <div>Page not found</div>;
         }
     };
@@ -286,6 +291,7 @@ const App: React.FC = () => {
                     <Suspense fallback={<div />}>
                         {selectedProperty && <PropertyDetailModal property={selectedProperty} onClose={() => setSelectedProperty(null)} userType={user.type} onScheduleViewing={handleSaveAgenda} signedNdaIds={signedNdaIds} onSignNda={handleSignNda} onUpdateProperty={handleUpdateProperty}/>}
                         {selectedOffMarketProperty && <OffMarketDetailModal property={selectedOffMarketProperty} onClose={() => setSelectedOffMarketProperty(null)} onRequestVisit={handleRequestOffMarketVisit} />}
+                        {selectedCuratedAsset && <CuratedAssetDossierModal asset={selectedCuratedAsset} onClose={() => setSelectedCuratedAsset(null)} onAddRequest={handleAddRequest} />}
                         {isGhostBidModalOpen && mandateForGhostBid && <GhostBidModal mandate={mandateForGhostBid} onClose={() => setIsGhostBidModalOpen(false)} onSave={(mandate) => { handleSaveOrUpdateMandate(mandate); setIsGhostBidModalOpen(false); }} />}
                         {isPrivateDeskModalOpen && <PrivateDeskRequestModal isOpen={isPrivateDeskModalOpen} requestType={privateDeskRequestType} user={user} onClose={() => setIsPrivateDeskModalOpen(false)} onSave={(details) => { handleAddRequest({ type: 'Action', title: `Private Desk: ${privateDeskRequestType}`, assignee: 'Senior Partner', status: 'Urgent', details }); setIsPrivateDeskModalOpen(false); }} />}
                         {isFamilyOfficeBlueprintModalOpen && <FamilyOfficeBlueprintModal onClose={() => setIsFamilyOfficeBlueprintModalOpen(false)} onSave={(details) => { handleAddRequest({ type: 'Action', title: 'Family Office Blueprint Request', assignee: 'Senior Partner', status: 'Urgent', details: JSON.stringify(details) }); setIsFamilyOfficeBlueprintModalOpen(false); }} />}

@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import WidgetCard from '../../ui/WidgetCard';
 import Button from '../../ui/Button';
-import { initialRequestItems, RequestItem } from '../../../data/appData';
+import { RequestItem } from '../../../data/appData';
 import { SearchIcon, EditIcon, PlusCircleIcon } from '../../icons/EliteIcons';
 import ServiceRequestModal from './ServiceRequestModal';
 
-const ServiceDesk: React.FC = () => {
-    const [requests, setRequests] = useState<RequestItem[]>(initialRequestItems);
+interface ServiceDeskProps {
+    items: RequestItem[];
+    setItems: React.Dispatch<React.SetStateAction<RequestItem[]>>;
+}
+
+const ServiceDesk: React.FC<ServiceDeskProps> = ({ items, setItems }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingRequest, setEditingRequest] = useState<Partial<RequestItem> | null>(null);
 
@@ -16,10 +20,11 @@ const ServiceDesk: React.FC = () => {
     };
 
     const handleSaveRequest = (requestToSave: RequestItem) => {
-        if (requestToSave.id && requests.some(r => r.id === requestToSave.id)) {
-            setRequests(requests.map(r => r.id === requestToSave.id ? requestToSave : r));
+        const exists = items.some(r => r.id === requestToSave.id);
+        if (exists) {
+            setItems(items.map(r => r.id === requestToSave.id ? requestToSave : r));
         } else {
-            setRequests(prev => [...prev, { ...requestToSave, id: Date.now() }]);
+            setItems(prev => [requestToSave, ...prev]);
         }
         setIsModalOpen(false);
         setEditingRequest(null);
@@ -65,7 +70,7 @@ const ServiceDesk: React.FC = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {requests.map(req => (
+                            {items.map(req => (
                                 <tr key={req.id} className="border-b border-gray-800 hover:bg-white/5">
                                     <td className="px-6 py-4 font-medium text-white">{req.title}</td>
                                     <td className="px-6 py-4">{req.requester}</td>

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import AdminSidebar from './AdminSidebar.tsx';
 import AdminDashboard from './modules/AdminDashboard.tsx';
@@ -24,6 +23,7 @@ import type { WatchItem } from '../../data/watchesData.ts';
 import type { AutomobileItem } from '../../data/automobilesData.ts';
 import type { JewelItem } from '../../data/jewelsData.ts';
 import type { WineItem } from '../../data/winesData.ts';
+import type { RequestItem } from '../../data/appData.ts';
 
 interface AdminPageProps {
     portfolioItems: PortfolioItem[];
@@ -44,6 +44,8 @@ interface AdminPageProps {
     currentLogo: LogoConfig;
     currentBgs: BackgroundImages;
     currentUserEmail: string;
+    requestItems: RequestItem[];
+    setRequestItems: React.Dispatch<React.SetStateAction<RequestItem[]>>;
 }
 
 const AdminPage: React.FC<AdminPageProps> = (props) => {
@@ -54,7 +56,7 @@ const AdminPage: React.FC<AdminPageProps> = (props) => {
             case 'dashboard': return <AdminDashboard />;
             case 'user-management': return <UserManagement />;
             case 'property-management': return <PropertyManagement {...props} />;
-            case 'service-desk': return <ServiceDesk />;
+            case 'service-desk': return <ServiceDesk items={props.requestItems} setItems={props.setRequestItems} />;
             case 'invitations': return <InvitationSystem />;
             case 'crm': return <Crm />;
             case 'finance': return <Finance />;

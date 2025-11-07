@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef useMemo } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import type { PortfolioItem } from '../data/portfolioData.ts';
 import { MapPinIcon, MaximizeIcon, FilterIcon } from './icons/EliteIcons.tsx';
 import { useLocalization } from '../localization/LocalizationContext.tsx';

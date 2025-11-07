@@ -180,9 +180,7 @@ const MarketIntelligencePage: React.FC<MarketIntelligencePageProps> = ({ user, o
             setBriefings(prev => ({ ...prev, [report.id]: { text: resultText, loading: false, error: '' } }));
             briefingCache.set(cacheKey, resultText);
         } catch (error) {
-            // FIX: Safely handle potential API errors by checking the error type before accessing properties.
-            // The `error` object in a catch block is of type 'unknown'. We must check if it's an
-            // instance of Error before accessing `error.message` to avoid a TypeScript error.
+            // FIX: Safely handle potential API errors by checking if the error is an instance of Error before accessing its `message` property.
             console.error("AI briefing error:", error);
             let errorMessage = t('widgets.aiEvaluation.error');
             if (error instanceof Error) {
