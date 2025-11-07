@@ -1,10 +1,11 @@
 import React, { useState, lazy, Suspense } from 'react';
 import { useLocalization } from '../localization/LocalizationContext';
-import { ShieldCheckIcon, LockClosedIcon } from './icons/EliteIcons';
+import { ShieldCheckIcon, LockClosedIcon, AIIcon } from './icons/EliteIcons';
 import Button from './ui/Button';
 import type { RequestItem } from '../data/appData';
 
-const ServiceRequestModal = lazy(() => import('./ServiceRequestModal'));
+const ThreatBriefingModal = lazy(() => import('./ThreatBriefingModal.tsx'));
+const SecurityProtocolDetailModal = lazy(() => import('./SecurityProtocolDetailModal.tsx'));
 
 interface Protocol {
     key: string;
@@ -26,21 +27,8 @@ interface SecurityDiscretionPageProps {
 
 const SecurityDiscretionPage: React.FC<SecurityDiscretionPageProps> = ({ onAddRequest }) => {
     const { t } = useLocalization();
-    const [requestModalService, setRequestModalService] = useState<{ title: string } | null>(null);
-
-    const handleSaveRequest = (details: { request: string }) => {
-        if (!requestModalService) return;
-        const newRequest: Omit<RequestItem, 'id' | 'requester'> = {
-            type: 'Action',
-            title: `Security Consultation: ${requestModalService.title}`,
-            assignee: 'Senior Security Advisor',
-            status: 'Urgent',
-            details: details.request,
-        };
-        onAddRequest(newRequest);
-        alert(t('securityDiscretion.requestConfirmation'));
-        setRequestModalService(null);
-    };
+    const [isBriefingOpen, setIsBriefingOpen] = useState(false);
+    const [selectedProtocol, setSelectedProtocol] = useState<Protocol | null>(null);
 
     return (
         <>
@@ -51,11 +39,20 @@ const SecurityDiscretionPage: React.FC<SecurityDiscretionPageProps> = ({ onAddRe
                     </div>
                     <h1 className="text-3xl md:text-4xl font-bold text-white text-glow">{t('securityDiscretion.title')}</h1>
                     <p className="text-gray-400 max-w-2xl mx-auto mt-2">{t('securityDiscretion.text')}</p>
+                     <Button size="lg" onClick={() => setIsBriefingOpen(true)} className="mt-6 inline-flex items-center gap-2">
+                        <AIIcon className="w-5 h-5" />
+                        Generate Global Threat Briefing
+                    </Button>
                 </header>
 
                 <div className="space-y-10 max-w-4xl mx-auto">
                     {protocols.map((protocol, index) => (
-                        <div key={protocol.key} className="bg-[#111116]/60 border border-gray-800 rounded-xl shadow-lg p-6 animate-fade-in-up" style={{ animationDelay: `${index * 100}ms` }}>
+                        <div 
+                            key={protocol.key} 
+                            onClick={() => setSelectedProtocol(protocol)}
+                            className="bg-[#111116]/60 border border-gray-800 rounded-xl shadow-lg p-6 animate-fade-in-up transition-all duration-300 hover:border-cyan-500/50 hover:shadow-cyan-500/10 cursor-pointer" 
+                            style={{ animationDelay: `${index * 100}ms` }}
+                        >
                             <div className="flex flex-col md:flex-row items-center gap-6 mb-4">
                                 <div className="flex-shrink-0 text-cyan-400 bg-gray-900 p-4 rounded-full border border-gray-700">
                                     {protocol.icon}
@@ -68,12 +65,6 @@ const SecurityDiscretionPage: React.FC<SecurityDiscretionPageProps> = ({ onAddRe
                             </div>
 
                             <p className="text-gray-300 mt-3 text-sm">{t(`securityDiscretion.protocols.${protocol.key}.description`)}</p>
-                            
-                            <div className="mt-6 pt-6 border-t border-gray-800 flex justify-end">
-                                <Button size="md" onClick={() => setRequestModalService({ title: t(`securityDiscretion.protocols.${protocol.key}.title`) })}>
-                                    {t('securityDiscretion.requestButton')}
-                                </Button>
-                            </div>
                         </div>
                     ))}
                 </div>
@@ -84,13 +75,14 @@ const SecurityDiscretionPage: React.FC<SecurityDiscretionPageProps> = ({ onAddRe
             </div>
             
             <Suspense fallback={null}>
-                {requestModalService && (
-                    <ServiceRequestModal
-                        title={`Consultation: ${requestModalService.title}`}
-                        prompt="Please provide details regarding your security inquiry."
-                        placeholder="e.g., I'm interested in a security audit for my primary residence..."
-                        onClose={() => setRequestModalService(null)}
-                        onSave={handleSaveRequest}
+                {isBriefingOpen && (
+                    <ThreatBriefingModal onClose={() => setIsBriefingOpen(false)} />
+                )}
+                {selectedProtocol && (
+                    <SecurityProtocolDetailModal 
+                        protocol={selectedProtocol}
+                        onClose={() => setSelectedProtocol(null)}
+                        onAddRequest={onAddRequest}
                     />
                 )}
             </Suspense>
