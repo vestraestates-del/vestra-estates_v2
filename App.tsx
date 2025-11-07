@@ -40,6 +40,7 @@ const PrivacyAgreementModal = lazy(() => import('./components/PrivacyAgreementMo
 const MfaModal = lazy(() => import('./components/MfaModal.tsx'));
 const OffMarketDetailModal = lazy(() => import('./components/OffMarketDetailModal.tsx'));
 const CuratedAssetDossierModal = lazy(() => import('./components/CuratedAssetDossierModal.tsx'));
+const NominationModal = lazy(() => import('./components/NominationModal.tsx'));
 
 
 // Data
@@ -129,6 +130,7 @@ const App: React.FC = () => {
     const [showMfaModal, setShowMfaModal] = useState(false);
     const [tempLoginInfo, setTempLoginInfo] = useState<{user: User, email: string} | null>(null);
     const [signedNdaIds, setSignedNdaIds] = useState(new Set<number>());
+    const [isNominationModalOpen, setIsNominationModalOpen] = useState(false);
 
     // Chat State
     const [chattingWith, setChattingWith] = useState<CircleMember | null>(null);
@@ -244,7 +246,7 @@ const App: React.FC = () => {
             case 'asset-management': return <AssetManagementPage portfolioItems={portfolioItems} onOpenPropertyDetail={setSelectedProperty} />;
             case 'services': return <ServicesPage onAddRequest={handleAddRequest} />;
             case 'curators-room': return <CuratorsRoom artCollection={artCollection} watchCollection={watchCollection} automobileCollection={automobileCollection} jewelCollection={jewelCollection} wineCollection={wineCollection} onOpenDossier={setSelectedCuratedAsset} />;
-            case 'circle': return <CirclePage members={circleMembers.filter(m => m.email !== user?.email)} onOpenChat={setChattingWith} unreadMessages={unreadMessages} />;
+            case 'circle': return <CirclePage user={user!} members={circleMembers.filter(m => m.email !== user?.email)} onOpenChat={setChattingWith} unreadMessages={unreadMessages} onAddRequest={handleAddRequest} onNominate={() => setIsNominationModalOpen(true)} />;
             case 'mandates': return <AcquisitionMandatesPage mandates={mandates} onSaveOrUpdateMandate={handleSaveOrUpdateMandate} onOpenGhostBidModal={handleOpenGhostBidModal} />;
             case 'off-market': return <OffMarketIntelligencePage properties={offMarketProperties} onOpenDetail={setSelectedOffMarketProperty} />;
             case 'market-intelligence': return <MarketIntelligencePage user={user!} onUpgrade={() => setShowTiers(true)} portfolioItems={portfolioItems} onAddRequest={handleAddRequest}/>;
@@ -295,6 +297,7 @@ const App: React.FC = () => {
                         {isGhostBidModalOpen && mandateForGhostBid && <GhostBidModal mandate={mandateForGhostBid} onClose={() => setIsGhostBidModalOpen(false)} onSave={(mandate) => { handleSaveOrUpdateMandate(mandate); setIsGhostBidModalOpen(false); }} />}
                         {isPrivateDeskModalOpen && <PrivateDeskRequestModal isOpen={isPrivateDeskModalOpen} requestType={privateDeskRequestType} user={user} onClose={() => setIsPrivateDeskModalOpen(false)} onSave={(details) => { handleAddRequest({ type: 'Action', title: `Private Desk: ${privateDeskRequestType}`, assignee: 'Senior Partner', status: 'Urgent', details }); setIsPrivateDeskModalOpen(false); }} />}
                         {isFamilyOfficeBlueprintModalOpen && <FamilyOfficeBlueprintModal onClose={() => setIsFamilyOfficeBlueprintModalOpen(false)} onSave={(details) => { handleAddRequest({ type: 'Action', title: 'Family Office Blueprint Request', assignee: 'Senior Partner', status: 'Urgent', details: JSON.stringify(details) }); setIsFamilyOfficeBlueprintModalOpen(false); }} />}
+                        {isNominationModalOpen && <NominationModal onClose={() => setIsNominationModalOpen(false)} onSave={(details) => { handleAddRequest({ type: 'Action', title: 'New Member Nomination', assignee: 'Senior Partner', status: 'Pending', details: JSON.stringify(details) }); setIsNominationModalOpen(false); }} />}
                     </Suspense>
                 </div>
             </CurrencyProvider>
