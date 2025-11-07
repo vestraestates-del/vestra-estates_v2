@@ -182,7 +182,7 @@ const MarketIntelligencePage: React.FC<MarketIntelligencePageProps> = ({ user, o
         } catch (error) {
             console.error("AI briefing error:", error);
             let errorMessage = t('widgets.aiEvaluation.error');
-// FIX: The 'error' variable in a catch block is of type 'unknown' in strict TypeScript. Added a type guard ('instanceof Error') to safely check for the error type before accessing its 'message' property. This resolves the error "Argument of type 'unknown' is not assignable to parameter of type 'string'".
+            // FIX: The 'error' object in a catch block is of type 'unknown'. Added 'instanceof Error' type guard to safely access properties on the 'error' object.
             if (error instanceof Error) {
                 if (error.message.includes('429') || error.message.includes('RESOURCE_EXHAUSTED')) {
                     errorMessage = t('widgets.errors.rateLimit');

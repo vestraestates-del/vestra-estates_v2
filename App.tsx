@@ -41,6 +41,8 @@ const MfaModal = lazy(() => import('./components/MfaModal.tsx'));
 const OffMarketDetailModal = lazy(() => import('./components/OffMarketDetailModal.tsx'));
 const CuratedAssetDossierModal = lazy(() => import('./components/CuratedAssetDossierModal.tsx'));
 const NominationModal = lazy(() => import('./components/NominationModal.tsx'));
+const PrivacyModal = lazy(() => import('./components/PrivacyModal.tsx'));
+const TermsOfUseModal = lazy(() => import('./components/TermsOfUseModal.tsx'));
 
 
 // Data
@@ -131,6 +133,8 @@ const App: React.FC = () => {
     const [tempLoginInfo, setTempLoginInfo] = useState<{user: User, email: string} | null>(null);
     const [signedNdaIds, setSignedNdaIds] = useState(new Set<number>());
     const [isNominationModalOpen, setIsNominationModalOpen] = useState(false);
+    const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+    const [showTermsModal, setShowTermsModal] = useState(false);
 
     // Chat State
     const [chattingWith, setChattingWith] = useState<CircleMember | null>(null);
@@ -260,44 +264,63 @@ const App: React.FC = () => {
         }
     };
     
-    if (showTiers) {
-        return <Suspense fallback={<div/>}><MembershipTiersPage onBack={() => setShowTiers(false)} backgroundImage={backgroundImage} logoConfig={logoConfig}/></Suspense>;
-    }
-
-    if (!user) {
-        return (
-            <LocalizationProvider>
-                <CurrencyProvider>
-                    <LoginScreen slogan="Discretion is the cornerstone of legacy." onLogin={handleLogin} onShowTiers={() => setShowTiers(true)} logoConfig={logoConfig} backgroundImage={backgroundImage} mockUsers={mockUsers} />
-                    <Suspense fallback={<div/>}>
-                        {showPrivacyAgreement && tempLoginInfo && <PrivacyAgreementModal user={tempLoginInfo.user} onClose={() => { setShowPrivacyAgreement(false); setTempLoginInfo(null); }} onConfirm={handlePrivacyAgreement} />}
-                        {showMfaModal && <MfaModal onClose={() => { setShowMfaModal(false); setTempLoginInfo(null); }} onVerify={handleMfaVerify} />}
-                    </Suspense>
-                </CurrencyProvider>
-            </LocalizationProvider>
-        );
-    }
-
     return (
         <LocalizationProvider>
             <CurrencyProvider>
-                <div className="flex h-screen w-screen bg-black text-white overflow-hidden">
-                    <Sidebar activePage={activePage} onNavigate={setActivePage} onLogout={handleLogout} user={user} logoConfig={logoConfig} />
-                    <main className="flex-1 overflow-y-auto bg-gray-900 bg-cover bg-center" style={{ backgroundImage: "url('/grid-bg.svg')"}}>
-                        <Suspense fallback={<div className="p-8">Loading...</div>}>
-                            {renderPage()}
-                        </Suspense>
-                    </main>
-                    <ChatController members={circleMembers} portfolioItems={portfolioItems} artCollection={artCollection} specialRentals={initialSpecialRentals} watchCollection={watchCollection} automobileCollection={automobileCollection} jewelCollection={jewelCollection} agendaItems={agendaItems} requestItems={requestItems} />
-                    {chattingWith && <div className="fixed bottom-4 right-4 z-30"><MemberChatWindow member={chattingWith} onClose={() => setChattingWith(null)} onNewMessage={() => setUnreadMessages(prev => ({...prev, [chattingWith.id]: (prev[chattingWith.id] || 0) + 1}))} {...{ portfolioItems, artCollection, specialRentals: initialSpecialRentals, watchCollection, automobileCollection, jewelCollection, agendaItems, requestItems }} /></div>}
+                <div className="w-screen h-screen">
+                    {(() => {
+                        if (showTiers) {
+                            return (
+                                <Suspense fallback={<div/>}>
+                                    <MembershipTiersPage onBack={() => setShowTiers(false)} backgroundImage={backgroundImage} logoConfig={logoConfig}/>
+                                </Suspense>
+                            );
+                        }
+
+                        if (!user) {
+                            return (
+                                <>
+                                    <LoginScreen slogan="Discretion is the cornerstone of legacy." onLogin={handleLogin} onShowTiers={() => setShowTiers(true)} logoConfig={logoConfig} backgroundImage={backgroundImage} mockUsers={mockUsers} />
+                                    <Suspense fallback={<div/>}>
+                                        {showPrivacyAgreement && tempLoginInfo && <PrivacyAgreementModal user={tempLoginInfo.user} onClose={() => { setShowPrivacyAgreement(false); setTempLoginInfo(null); }} onConfirm={handlePrivacyAgreement} />}
+                                        {showMfaModal && <MfaModal onClose={() => { setShowMfaModal(false); setTempLoginInfo(null); }} onVerify={handleMfaVerify} />}
+                                    </Suspense>
+                                </>
+                            );
+                        }
+                        
+                        return (
+                             <div className="flex h-screen w-screen bg-black text-white overflow-hidden">
+                                <Sidebar activePage={activePage} onNavigate={setActivePage} onLogout={handleLogout} user={user} logoConfig={logoConfig} />
+                                <main className="flex-1 overflow-y-auto bg-gray-900 bg-cover bg-center" style={{ backgroundImage: "url('/grid-bg.svg')"}}>
+                                    <Suspense fallback={<div className="p-8">Loading...</div>}>
+                                        {renderPage()}
+                                    </Suspense>
+                                </main>
+                                <ChatController members={circleMembers} portfolioItems={portfolioItems} artCollection={artCollection} specialRentals={initialSpecialRentals} watchCollection={watchCollection} automobileCollection={automobileCollection} jewelCollection={jewelCollection} agendaItems={agendaItems} requestItems={requestItems} />
+                                {chattingWith && <div className="fixed bottom-4 right-4 z-30"><MemberChatWindow member={chattingWith} onClose={() => setChattingWith(null)} onNewMessage={() => setUnreadMessages(prev => ({...prev, [chattingWith.id]: (prev[chattingWith.id] || 0) + 1}))} {...{ portfolioItems, artCollection, specialRentals: initialSpecialRentals, watchCollection, automobileCollection, jewelCollection, agendaItems, requestItems }} /></div>}
+                                <Suspense fallback={<div />}>
+                                    {selectedProperty && <PropertyDetailModal property={selectedProperty} onClose={() => setSelectedProperty(null)} userType={user.type} onScheduleViewing={handleSaveAgenda} signedNdaIds={signedNdaIds} onSignNda={handleSignNda} onUpdateProperty={handleUpdateProperty}/>}
+                                    {selectedOffMarketProperty && <OffMarketDetailModal property={selectedOffMarketProperty} onClose={() => setSelectedOffMarketProperty(null)} onRequestVisit={handleRequestOffMarketVisit} />}
+                                    {selectedCuratedAsset && <CuratedAssetDossierModal asset={selectedCuratedAsset} onClose={() => setSelectedCuratedAsset(null)} onAddRequest={handleAddRequest} />}
+                                    {isGhostBidModalOpen && mandateForGhostBid && <GhostBidModal mandate={mandateForGhostBid} onClose={() => setIsGhostBidModalOpen(false)} onSave={(mandate) => { handleSaveOrUpdateMandate(mandate); setIsGhostBidModalOpen(false); }} />}
+                                    {isPrivateDeskModalOpen && <PrivateDeskRequestModal isOpen={isPrivateDeskModalOpen} requestType={privateDeskRequestType} user={user} onClose={() => setIsPrivateDeskModalOpen(false)} onSave={(details) => { handleAddRequest({ type: 'Action', title: `Private Desk: ${privateDeskRequestType}`, assignee: 'Senior Partner', status: 'Urgent', details }); setIsPrivateDeskModalOpen(false); }} />}
+                                    {isFamilyOfficeBlueprintModalOpen && <FamilyOfficeBlueprintModal onClose={() => setIsFamilyOfficeBlueprintModalOpen(false)} onSave={(details) => { handleAddRequest({ type: 'Action', title: 'Family Office Blueprint Request', assignee: 'Senior Partner', status: 'Urgent', details: JSON.stringify(details) }); setIsFamilyOfficeBlueprintModalOpen(false); }} />}
+                                    {isNominationModalOpen && <NominationModal onClose={() => setIsNominationModalOpen(false)} onSave={(details) => { handleAddRequest({ type: 'Action', title: 'New Member Nomination', assignee: 'Senior Partner', status: 'Pending', details: JSON.stringify(details) }); setIsNominationModalOpen(false); }} />}
+                                </Suspense>
+                            </div>
+                        );
+                    })()}
+                    
+                    <footer className="fixed bottom-0 left-0 right-0 bg-black/50 text-gray-500 text-xs text-center p-2 z-50 backdrop-blur-sm">
+                        © 2025 Vestra Estates. All Rights Reserved. The content of this site is the property of Vestra Estates and is protected by international copyright laws. For more information, please review our{' '}
+                        <button onClick={() => setShowPrivacyModal(true)} className="underline hover:text-white transition-colors">Privacy Policy</button> and{' '}
+                        <button onClick={() => setShowTermsModal(true)} className="underline hover:text-white transition-colors">Terms of Use</button>.
+                    </footer>
+
                     <Suspense fallback={<div />}>
-                        {selectedProperty && <PropertyDetailModal property={selectedProperty} onClose={() => setSelectedProperty(null)} userType={user.type} onScheduleViewing={handleSaveAgenda} signedNdaIds={signedNdaIds} onSignNda={handleSignNda} onUpdateProperty={handleUpdateProperty}/>}
-                        {selectedOffMarketProperty && <OffMarketDetailModal property={selectedOffMarketProperty} onClose={() => setSelectedOffMarketProperty(null)} onRequestVisit={handleRequestOffMarketVisit} />}
-                        {selectedCuratedAsset && <CuratedAssetDossierModal asset={selectedCuratedAsset} onClose={() => setSelectedCuratedAsset(null)} onAddRequest={handleAddRequest} />}
-                        {isGhostBidModalOpen && mandateForGhostBid && <GhostBidModal mandate={mandateForGhostBid} onClose={() => setIsGhostBidModalOpen(false)} onSave={(mandate) => { handleSaveOrUpdateMandate(mandate); setIsGhostBidModalOpen(false); }} />}
-                        {isPrivateDeskModalOpen && <PrivateDeskRequestModal isOpen={isPrivateDeskModalOpen} requestType={privateDeskRequestType} user={user} onClose={() => setIsPrivateDeskModalOpen(false)} onSave={(details) => { handleAddRequest({ type: 'Action', title: `Private Desk: ${privateDeskRequestType}`, assignee: 'Senior Partner', status: 'Urgent', details }); setIsPrivateDeskModalOpen(false); }} />}
-                        {isFamilyOfficeBlueprintModalOpen && <FamilyOfficeBlueprintModal onClose={() => setIsFamilyOfficeBlueprintModalOpen(false)} onSave={(details) => { handleAddRequest({ type: 'Action', title: 'Family Office Blueprint Request', assignee: 'Senior Partner', status: 'Urgent', details: JSON.stringify(details) }); setIsFamilyOfficeBlueprintModalOpen(false); }} />}
-                        {isNominationModalOpen && <NominationModal onClose={() => setIsNominationModalOpen(false)} onSave={(details) => { handleAddRequest({ type: 'Action', title: 'New Member Nomination', assignee: 'Senior Partner', status: 'Pending', details: JSON.stringify(details) }); setIsNominationModalOpen(false); }} />}
+                        {showPrivacyModal && <PrivacyModal onClose={() => setShowPrivacyModal(false)} />}
+                        {showTermsModal && <TermsOfUseModal onClose={() => setShowTermsModal(false)} />}
                     </Suspense>
                 </div>
             </CurrencyProvider>
