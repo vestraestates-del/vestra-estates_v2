@@ -1,7 +1,3 @@
-
-
-
-
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { CloseIcon, SendIcon, MicrophoneIcon, StopCircleIcon } from './icons/EliteIcons.tsx';
 import type { PortfolioItem } from '../data/portfolioData.ts';
@@ -254,16 +250,24 @@ ${JSON.stringify(siteContext, null, 2)}
 
     if (!isChatOpen) {
         return (
-            <div 
-                className="fixed bottom-4 left-1/2 -translate-x-1/2 w-48 h-1 bg-cyan-400/80 rounded-full cursor-pointer animate-slow-pulse-glow z-40"
+            <div
+                className="fixed bottom-2 left-1/2 -translate-x-1/2 flex items-end justify-center h-6 gap-1 cursor-pointer z-51 group"
                 onClick={() => setIsChatOpen(true)}
                 aria-label="Open Aura Assistant"
-            />
+            >
+                <div className="animate-wavy-speech flex items-end h-full gap-0.5">
+                    <div className="w-1 h-full bg-cyan-400/80 rounded-full origin-bottom group-hover:bg-cyan-300 transition-colors"></div>
+                    <div className="w-1 h-full bg-cyan-400/80 rounded-full origin-bottom group-hover:bg-cyan-300 transition-colors"></div>
+                    <div className="w-1 h-full bg-cyan-400/80 rounded-full origin-bottom group-hover:bg-cyan-300 transition-colors"></div>
+                    <div className="w-1 h-full bg-cyan-400/80 rounded-full origin-bottom group-hover:bg-cyan-300 transition-colors"></div>
+                    <div className="w-1 h-full bg-cyan-400/80 rounded-full origin-bottom group-hover:bg-cyan-300 transition-colors"></div>
+                </div>
+            </div>
         );
     }
 
     return (
-        <div className="fixed bottom-0 left-0 right-0 h-full md:h-auto md:max-h-[80vh] md:bottom-8 md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-2xl bg-[#111116] border border-gray-800 rounded-t-xl md:rounded-xl shadow-2xl flex flex-col z-40 animate-fade-in-up">
+        <div className="fixed bottom-0 left-0 right-0 h-full md:h-auto md:max-h-[80vh] md:bottom-8 md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-2xl bg-[#111116] border border-gray-800 rounded-t-xl md:rounded-xl shadow-2xl flex flex-col z-51 animate-fade-in-up">
             <div className="p-3 border-b border-gray-800 flex items-center justify-between flex-shrink-0">
                 <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center flex-shrink-0 relative">

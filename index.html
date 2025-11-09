@@ -51,6 +51,17 @@
             animation: slow-pulse-glow 4s infinite ease-in-out;
         }
         
+        @-webkit-keyframes wavy-speech { 0%, 100% { transform: scaleY(0.2); } 50% { transform: scaleY(1); } }
+        @keyframes wavy-speech { 0%, 100% { transform: scaleY(0.2); } 50% { transform: scaleY(1); } }
+        .animate-wavy-speech > div {
+            -webkit-animation: wavy-speech 1.5s infinite ease-in-out;
+            animation: wavy-speech 1.5s infinite ease-in-out;
+        }
+        .animate-wavy-speech > div:nth-child(2) { -webkit-animation-delay: 0.2s; animation-delay: 0.2s; }
+        .animate-wavy-speech > div:nth-child(3) { -webkit-animation-delay: 0.4s; animation-delay: 0.4s; }
+        .animate-wavy-speech > div:nth-child(4) { -webkit-animation-delay: 0.6s; animation-delay: 0.6s; }
+        .animate-wavy-speech > div:nth-child(5) { -webkit-animation-delay: 0.8s; animation-delay: 0.8s; }
+
         @-webkit-keyframes thinking-dots { 0%, 20% { transform: scale(1); } 50% { transform: scale(1.5); } }
         @keyframes thinking-dots { 0%, 20% { transform: scale(1); } 50% { transform: scale(1.5); } }
         .dot-flashing div {

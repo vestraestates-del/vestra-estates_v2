@@ -55,7 +55,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ slogan, onLogin, onShowTiers,
                                 autoComplete="email"
                                 required
                                 className="w-full rounded-md border border-gray-700 bg-gray-900/50 px-3 py-2 text-white placeholder-gray-500 focus:border-cyan-500 focus:outline-none focus:ring-cyan-500 sm:text-sm"
-                                placeholder="Email (e.g., adrian@vestra.com)"
+                                placeholder="Email (e.g., admin@vestraestates.com)"
                             />
                         </div>
                          <div>

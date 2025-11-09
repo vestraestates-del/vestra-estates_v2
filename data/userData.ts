@@ -35,11 +35,11 @@ export const mockUsers: { [key: string]: MockUser } = {
         password: 'password123',
         avatar: `https://i.pravatar.cc/150?u=sofia`,
     },
-    'admin@vestra.com': {
+    'admin@vestraestates.com': {
         name: 'C. Blackwood',
-        email: 'admin@vestra.com',
+        email: 'admin@vestraestates.com',
         type: 'admin',
-        password: 'adminpassword',
+        password: 'N//Mimarlik*/25Architecture//',
         avatar: `https://i.pravatar.cc/150?u=blackwood`,
     },
 };

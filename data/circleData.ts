@@ -23,5 +23,5 @@ export const circleMembers: CircleMember[] = [
   { id: 5, name: "Charles Dubois", email: "charles.dubois@chateaudubois.com", title: "Vintner", company: "Château Dubois", avatar: `https://i.pravatar.cc/150?u=charles`, online: false, interests: ["Oenology", "Sailing", "History"], gender: 'male', tier: 'Elit Access', invitationCode: 'CD-005' },
   // FIX: Added 'C. Blackwood' to the circleMembers array. He is the private desk contact
   // and was missing, which would cause a runtime error on the Private Desk page.
-  { id: 6, name: "C. Blackwood", email: "admin@vestra.com", title: "Senior Partner, Private Desk", company: "VESTRA ESTATES", avatar: `https://i.pravatar.cc/150?u=blackwood`, online: true, interests: ["Discreet Services", "Security", "Global Logistics"], gender: 'male', tier: 'Royal Black Access', invitationCode: null },
+  { id: 6, name: "C. Blackwood", email: "admin@vestraestates.com", title: "Senior Partner, Private Desk", company: "VESTRA ESTATES", avatar: `https://i.pravatar.cc/150?u=blackwood`, online: true, interests: ["Discreet Services", "Security", "Global Logistics"], gender: 'male', tier: 'Royal Black Access', invitationCode: null },
 ];

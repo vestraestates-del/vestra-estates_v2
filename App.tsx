@@ -83,16 +83,16 @@ export type AnyCuratedAsset = ArtItem | WatchItem | AutomobileItem | JewelItem |
 
 const defaultLogoConfig: LogoConfig = {
     type: 'image',
-    url: 'https://i.ibb.co/C2rP6P5/vestra-key-logo.png',
+    url: 'https://emthamuy15dz7ivf.public.blob.vercel-storage.com/Logo_V.png',
     navSize: 40,
     loginSize: 80,
     mobileNavSize: 32,
 };
 
 const defaultBackgroundImages: BackgroundImages = {
-    day: 'https://i.ibb.co/xc1yx2M/DAY-0512-LE.jpg',
-    evening: 'https://i.ibb.co/yn2PGHd/EVN-0511-LE.jpg',
-    night: 'https://i.ibb.co/TM2fv3Gn/NGH-0510-LE.jpg',
+    day: 'https://emthamuy15dz7ivf.public.blob.vercel-storage.com/DAY_0512_LE.jpg',
+    evening: 'https://emthamuy15dz7ivf.public.blob.vercel-storage.com/EVN_0511_LE.jpg',
+    night: 'https://emthamuy15dz7ivf.public.blob.vercel-storage.com/NGH_0510_LE.jpg',
 };
 
 
@@ -149,7 +149,7 @@ const App: React.FC = () => {
     
     const handleLogin = (loggedInUser: User, email: string) => {
         // In a real app, MFA status would come from user profile
-        if (email === 'admin@vestra.com' || email === 'sofia@vestra.com') {
+        if (email === 'admin@vestraestates.com' || email === 'sofia@vestra.com') {
             setTempLoginInfo({ user: loggedInUser, email });
             setShowMfaModal(true);
         } else {
@@ -278,7 +278,7 @@ const App: React.FC = () => {
             case 'market-intelligence': return <MarketIntelligencePage user={user!} onUpgrade={() => setShowTiers(true)} portfolioItems={portfolioItems} onAddRequest={handleAddRequest}/>;
             case 'ventures': return <JointVenturesPage ventures={initialJointVentures} onAddRequest={handleAddRequest} />;
             case 'security': return <SecurityDiscretionPage onAddRequest={handleAddRequest} />;
-            case 'private-desk': return <PrivateDeskPage user={user!} onOpenRequestModal={(type) => { setPrivateDeskRequestType(type); setIsPrivateDeskModalOpen(true); }} onNavigate={setActivePage} onOpenChat={setChattingWith} privateDeskMember={circleMembers.find(m => m.email === 'admin@vestra.com')!} />;
+            case 'private-desk': return <PrivateDeskPage user={user!} onOpenRequestModal={(type) => { setPrivateDeskRequestType(type); setIsPrivateDeskModalOpen(true); }} onNavigate={setActivePage} onOpenChat={setChattingWith} privateDeskMember={circleMembers.find(m => m.email === 'admin@vestraestates.com')!} />;
             case 'philanthropy': return <PhilanthropyBoardPage projects={initialPhilanthropyProjects} onAddRequest={handleAddRequest} />;
             case 'design-studio': return <DesignStudioPage onAddRequest={handleAddRequest} />;
             case 'admin': return user?.type === 'admin' ? <AdminPage portfolioItems={portfolioItems} setPortfolioItems={setPortfolioItems} offMarketProperties={offMarketProperties} setOffMarketProperties={setOffMarketProperties} artCollection={artCollection} setArtCollection={setArtCollection} watchCollection={watchCollection} setWatchCollection={setWatchCollection} automobileCollection={automobileCollection} setAutomobileCollection={setAutomobileCollection} jewelCollection={jewelCollection} setJewelCollection={setJewelCollection} wineCollection={wineCollection} setWineCollection={setWineCollection} onSaveBranding={handleSaveBranding} currentLogo={logoConfig} currentBgs={backgroundImages} currentUserEmail={user.email} requestItems={requestItems} setRequestItems={setRequestItems} /> : <Dashboard portfolioItems={portfolioItems} onOpenPropertyDetail={setSelectedProperty} agendaItems={agendaItems} onToggleComplete={handleToggleAgendaComplete} onSaveAgenda={handleSaveAgenda} onDeleteAgenda={handleDeleteAgenda} requestItems={requestItems} userType={user!.type} onAddRequest={handleAddRequest} onUpdateRequest={handleUpdateRequest} />;
@@ -317,6 +317,11 @@ const App: React.FC = () => {
                                         {showPrivacyAgreement && tempLoginInfo && <PrivacyAgreementModal user={tempLoginInfo.user} onClose={() => { setShowPrivacyAgreement(false); setTempLoginInfo(null); }} onConfirm={handlePrivacyAgreement} />}
                                         {showMfaModal && <MfaModal onClose={() => { setShowMfaModal(false); setTempLoginInfo(null); }} onVerify={handleMfaVerify} />}
                                     </Suspense>
+                                    <footer className="fixed bottom-0 left-0 right-0 bg-black/50 text-gray-500 text-xs text-center p-2 z-50 backdrop-blur-sm">
+                                        © 2025 Vestra Estates. All Rights Reserved. The content of this site is the property of Vestra Estates and is protected by international copyright laws. For more information, please review our{' '}
+                                        <button onClick={() => setShowPrivacyModal(true)} className="underline hover:text-white transition-colors">Privacy Policy</button> and{' '}
+                                        <button onClick={() => setShowTermsModal(true)} className="underline hover:text-white transition-colors">Terms of Use</button>.
+                                    </footer>
                                 </>
                             );
                         }
@@ -348,12 +353,6 @@ const App: React.FC = () => {
                             </div>
                         );
                     })()}
-                    
-                    <footer className="fixed bottom-0 left-0 right-0 bg-black/50 text-gray-500 text-xs text-center p-2 z-50 backdrop-blur-sm">
-                        © 2025 Vestra Estates. All Rights Reserved. The content of this site is the property of Vestra Estates and is protected by international copyright laws. For more information, please review our{' '}
-                        <button onClick={() => setShowPrivacyModal(true)} className="underline hover:text-white transition-colors">Privacy Policy</button> and{' '}
-                        <button onClick={() => setShowTermsModal(true)} className="underline hover:text-white transition-colors">Terms of Use</button>.
-                    </footer>
 
                     <Suspense fallback={<div />}>
                         {showPrivacyModal && <PrivacyModal onClose={() => setShowPrivacyModal(false)} />}
