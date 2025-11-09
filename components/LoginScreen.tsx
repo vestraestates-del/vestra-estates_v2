@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { VestraLogo, LogoConfig } from './icons/VestraLogo.tsx';
 // FIX: Updated import paths to be relative and include file extensions to ensure module resolution.
 import { User } from '../App.tsx';
@@ -14,10 +14,24 @@ interface LoginScreenProps {
   mockUsers: { [key: string]: MockUser };
 }
 
+const exampleEmails = [
+    'j.doe@aethelred.capital',
+    'a.rossi@rossicollection.art',
+    'k.tanaka@cyberdyne.com',
+    's.petrova@petrovarealestate.com',
+];
+
 const LoginScreen: React.FC<LoginScreenProps> = ({ slogan, onLogin, onShowTiers, logoConfig, backgroundImage, mockUsers }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [placeholderEmail, setPlaceholderEmail] = useState('');
+
+    useEffect(() => {
+        // Select a random email on component mount
+        const randomIndex = Math.floor(Math.random() * exampleEmails.length);
+        setPlaceholderEmail(exampleEmails[randomIndex]);
+    }, []);
 
     const handleLoginAttempt = (e: React.FormEvent) => {
         e.preventDefault();
@@ -55,7 +69,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ slogan, onLogin, onShowTiers,
                                 autoComplete="email"
                                 required
                                 className="w-full rounded-md border border-gray-700 bg-gray-900/50 px-3 py-2 text-white placeholder-gray-500 focus:border-cyan-500 focus:outline-none focus:ring-cyan-500 sm:text-sm"
-                                placeholder="Email (e.g., admin@vestraestates.com)"
+                                placeholder={`e.g., ${placeholderEmail}`}
                             />
                         </div>
                          <div>
