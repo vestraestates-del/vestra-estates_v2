@@ -1,5 +1,6 @@
 
 
+
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import type { CircleMember } from '../data/circleData.ts';
 import { CloseIcon, SendIcon } from './icons/EliteIcons.tsx';
@@ -121,7 +122,12 @@ ${JSON.stringify(siteContext, null, 2)}
         if (!response.ok) throw new Error('API request failed');
 
         const data = await response.json();
-        setMessages([{ sender: 'bot', text: data.text, timestamp: new Date() }]);
+        // FIX: Added type check to safely handle API response and prevent assigning 'unknown' to a string property.
+        if (data && typeof data.text === 'string') {
+            setMessages([{ sender: 'bot', text: data.text, timestamp: new Date() }]);
+        } else {
+            throw new Error('Invalid API response');
+        }
         
       } catch (error) {
         console.error("Failed to initialize member chat:", error);
@@ -163,8 +169,13 @@ ${JSON.stringify(siteContext, null, 2)}
       if (!response.ok) throw new Error('API request failed');
 
       const data = await response.json();
-      const botMessage: Message = { sender: 'bot', text: data.text, timestamp: new Date() };
-      setMessages(prev => [...prev, botMessage]);
+      // FIX: Added type check to safely handle API response and prevent assigning 'unknown' to a string property.
+      if (data && typeof data.text === 'string') {
+        const botMessage: Message = { sender: 'bot', text: data.text, timestamp: new Date() };
+        setMessages(prev => [...prev, botMessage]);
+      } else {
+        throw new Error('Invalid API response');
+      }
 
     } catch (error) {
       console.error('Error sending message:', error);

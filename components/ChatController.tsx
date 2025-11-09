@@ -1,5 +1,7 @@
 
 
+
+
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { CloseIcon, SendIcon, MicrophoneIcon, StopCircleIcon } from './icons/EliteIcons.tsx';
 import type { PortfolioItem } from '../data/portfolioData.ts';
@@ -80,7 +82,7 @@ const ChatController: React.FC<ChatControllerProps> = (props) => {
             },
             circleMembers: props.members.map(m => ({ name: m.name, title: m.title, company: m.company, interests: m.interests }))
         }
-    }, [props, t]);
+    }, [props.portfolioItems, props.artCollection, props.specialRentals, props.watchCollection, props.automobileCollection, props.jewelCollection, props.agendaItems, props.requestItems, props.members, t]);
     
     const systemInstruction = useMemo(() => `You are Aura, the premier AI Concierge for VESTRA ESTATES, designed for an elite clientele. Your persona is that of a seasoned, discreet, and highly articulate Senior Partner at a world-class real estate consultancy. Your communication must be sophisticated, insightful, and always client-centric.
 
@@ -120,7 +122,12 @@ ${JSON.stringify(siteContext, null, 2)}
             if (!response.ok) throw new Error('API request failed');
 
             const data = await response.json();
-            setMessages([{ sender: 'bot', text: data.text }]);
+            // FIX: Added type check to safely handle API response and prevent assigning 'unknown' to a string property.
+            if (data && typeof data.text === 'string') {
+                setMessages([{ sender: 'bot', text: data.text }]);
+            } else {
+                throw new Error('Invalid API response');
+            }
 
           } catch (error) {
             console.error("Failed to initialize Aura:", error);
@@ -216,9 +223,14 @@ ${JSON.stringify(siteContext, null, 2)}
             if (!response.ok) throw new Error('API request failed');
 
             const data = await response.json();
-            const botMessage: Message = { sender: 'bot', text: data.text };
-            setMessages(prev => [...prev, botMessage]);
-            setHasUnread(true);
+            // FIX: Added type check to safely handle API response and prevent assigning 'unknown' to a string property.
+            if (data && typeof data.text === 'string') {
+                const botMessage: Message = { sender: 'bot', text: data.text };
+                setMessages(prev => [...prev, botMessage]);
+                setHasUnread(true);
+            } else {
+                throw new Error('Invalid API response');
+            }
 
         } catch (error) {
             console.error('Error sending message:', error);

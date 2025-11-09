@@ -77,10 +77,15 @@ const CuratedAssetDossierModal: React.FC<CuratedAssetDossierModalProps> = ({ ass
 
                 if (!response.ok) throw new Error('Failed to generate analysis');
                 const data = await response.json();
-                const resultText = data.text;
 
-                setAnalyses(prev => ({ ...prev, [tab]: resultText }));
-                analysisCache.set(cacheKey, resultText);
+                // FIX: Added a type check to handle cases where the API response might not be a string, resolving an 'unknown' type error.
+                if (data && typeof data.text === 'string') {
+                    const resultText = data.text;
+                    setAnalyses(prev => ({ ...prev, [tab]: resultText }));
+                    analysisCache.set(cacheKey, resultText);
+                } else {
+                    throw new Error('Invalid response from AI service');
+                }
 
             } catch (err: any) {
                 let errorMessage = 'AI is currently unavailable. Please try again later.';

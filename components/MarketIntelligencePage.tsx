@@ -175,10 +175,17 @@ const MarketIntelligencePage: React.FC<MarketIntelligencePageProps> = ({ user, o
 
             if (!response.ok) throw new Error('Failed to generate briefing');
             
-            const data = await response.json();
-            // FIX: Safely validate that 'data.text' is a string before using it to prevent type errors.
-            if (data && typeof data.text === 'string') {
-                const resultText = data.text;
+            const data: unknown = await response.json();
+            
+            // FIX: Argument of type 'unknown' is not assignable to parameter of type 'string'.
+            // Replaced the simple type check with a more robust validation for the 'unknown' type returned by fetch, ensuring structural correctness and type safety.
+            if (
+                data &&
+                typeof data === 'object' &&
+                'text' in data &&
+                typeof (data as { text: unknown }).text === 'string'
+            ) {
+                const resultText = (data as { text: string }).text;
                 setBriefings(prev => ({ ...prev, [report.id]: { text: resultText, loading: false, error: '' } }));
                 briefingCache.set(cacheKey, resultText);
             } else {

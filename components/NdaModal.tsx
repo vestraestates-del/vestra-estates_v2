@@ -65,9 +65,14 @@ const NdaModal: React.FC<NdaModalProps> = ({ property, onConfirm, onClose }) => 
                 }
 
                 const data = await response.json();
-                const resultText = data.text;
-                setNdaText(resultText);
-                ndaCache.set(cacheKey, resultText);
+                // FIX: Added type check to safely handle API response and prevent assigning 'unknown' to a string state.
+                if (data && typeof data.text === 'string') {
+                    const resultText = data.text;
+                    setNdaText(resultText);
+                    ndaCache.set(cacheKey, resultText);
+                } else {
+                    throw new Error('Invalid response from AI service');
+                }
 
             } catch (err) {
                 console.error("NDA generation error:", err);

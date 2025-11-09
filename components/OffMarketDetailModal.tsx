@@ -120,9 +120,14 @@ const OffMarketDetailModal: React.FC<OffMarketDetailModalProps> = ({ property, o
                 }
 
                 const data = await response.json();
-                const resultText = data.text;
-                setAnalyses(prev => ({ ...prev, [tab]: resultText }));
-                analysisCache.set(cacheKey, resultText);
+                // FIX: Added type check to safely handle API response and prevent assigning 'unknown' to a string state.
+                if (data && typeof data.text === 'string') {
+                    const resultText = data.text;
+                    setAnalyses(prev => ({ ...prev, [tab]: resultText }));
+                    analysisCache.set(cacheKey, resultText);
+                } else {
+                    throw new Error('Invalid response from AI service');
+                }
 
             } catch (err) {
                 console.error(`AI analysis error for tab ${tab}:`, err);

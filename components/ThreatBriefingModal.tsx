@@ -38,9 +38,14 @@ const ThreatBriefingModal: React.FC<ThreatBriefingModalProps> = ({ onClose }) =>
                 if (!response.ok) throw new Error('Failed to generate briefing');
                 
                 const data = await response.json();
-                const resultText = data.text;
-                setBriefing(resultText);
-                briefingCache.set(cacheKey, resultText);
+                // FIX: Added type check to safely handle API response and prevent assigning 'unknown' to a string state.
+                if (data && typeof data.text === 'string') {
+                    const resultText = data.text;
+                    setBriefing(resultText);
+                    briefingCache.set(cacheKey, resultText);
+                } else {
+                    throw new Error('Invalid response from AI service');
+                }
             } catch (err: any) {
                 let errorMessage = 'AI is currently unavailable. Please try again later.';
                 if (err.message.includes('429')) {

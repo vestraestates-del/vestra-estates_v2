@@ -60,7 +60,7 @@ import { initialPhilanthropyProjects, PhilanthropyProject } from './data/philant
 import { fleetAssets } from './data/aviationYachtingData.ts';
 import { managedCollectionSummary } from './data/passionAssetData.ts';
 import { mockUsers, MockUser } from './data/userData.ts';
-import { LogoConfig } from './components/icons/VestraLogo.tsx';
+import { VestraLogo, LogoConfig } from './components/icons/VestraLogo.tsx';
 import { initialOffMarketProperties, OffMarketProperty } from './data/offMarketData.ts';
 
 // Type definitions
@@ -293,7 +293,17 @@ const App: React.FC = () => {
                     {(() => {
                         if (showTiers) {
                             return (
-                                <Suspense fallback={<div/>}>
+                                <Suspense fallback={
+                                    <div 
+                                        className="flex h-screen w-screen items-center justify-center bg-black bg-cover bg-center transition-all duration-1000 p-4" 
+                                        style={{ backgroundImage: `url(${backgroundImage})` }}
+                                    >
+                                        <div className="w-full max-w-sm rounded-xl border border-white/10 bg-black/70 p-8 shadow-2xl backdrop-blur-xl flex flex-col items-center">
+                                            <VestraLogo config={logoConfig} size={60} className="text-cyan-400 mb-6 animate-slow-pulse-glow" />
+                                            <p className="text-lg font-medium text-gray-300 text-center">Ultra-Luxury Real Estate for the World's Top 0.1%.</p>
+                                        </div>
+                                    </div>
+                                }>
                                     <MembershipTiersPage onBack={() => setShowTiers(false)} backgroundImage={backgroundImage} logoConfig={logoConfig}/>
                                 </Suspense>
                             );
@@ -315,7 +325,12 @@ const App: React.FC = () => {
                              <div className="flex h-screen w-screen bg-black text-white overflow-hidden">
                                 <Sidebar activePage={activePage} onNavigate={setActivePage} onLogout={handleLogout} user={user} logoConfig={logoConfig} />
                                 <main className="flex-1 overflow-y-auto bg-gray-900 bg-cover bg-center" style={{ backgroundImage: "url('/grid-bg.svg')"}}>
-                                    <Suspense fallback={<div className="p-8">Loading...</div>}>
+                                    <Suspense fallback={
+                                        <div className="w-full h-full flex flex-col items-center justify-center text-center p-8">
+                                            <VestraLogo config={logoConfig} size={60} className="text-cyan-400 mb-6 animate-slow-pulse-glow" />
+                                            <p className="text-lg font-medium text-gray-300">Ultra-Luxury Real Estate for the World's Top 0.1%.</p>
+                                        </div>
+                                    }>
                                         {renderPage()}
                                     </Suspense>
                                 </main>

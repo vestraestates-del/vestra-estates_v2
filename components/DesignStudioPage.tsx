@@ -36,7 +36,8 @@ const DesignStudioPage: React.FC<DesignStudioPageProps> = ({ onAddRequest }) => 
             });
             if (!response.ok) throw new Error('Failed to generate image.');
             const data = await response.json();
-            if (data.images && data.images.length > 0) {
+            // FIX: Added robust type checking for the image generation response to ensure it's an array of strings.
+            if (data.images && Array.isArray(data.images) && data.images.every((i: unknown) => typeof i === 'string')) {
                 setGeneratedImages(data.images);
             }
         } catch (error) {
@@ -77,7 +78,12 @@ const DesignStudioPage: React.FC<DesignStudioPageProps> = ({ onAddRequest }) => 
             });
             if (!response.ok) throw new Error('Failed to generate brief.');
             const data = await response.json();
-            setAiBrief(data.text);
+            // FIX: Added type check to safely handle API response and prevent assigning 'unknown' to a string state.
+            if (data && typeof data.text === 'string') {
+                setAiBrief(data.text);
+            } else {
+                throw new Error('Invalid response from AI service');
+            }
         } catch (error) {
             console.error(error);
         } finally {

@@ -8,12 +8,10 @@
     {
       "src": "api/generate.js",
       "use": "@vercel/node"
-    }
-  ],
-  "rewrites": [
+    },
     {
-      "source": "/api/(.*)",
-      "destination": "/api/generate.js"
+      "src": "api/upload.js",
+      "use": "@vercel/node"
     }
   ],
   "headers": [

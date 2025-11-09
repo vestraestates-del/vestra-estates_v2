@@ -47,9 +47,14 @@ const SecurityProtocolDetailModal: React.FC<SecurityProtocolDetailModalProps> = 
             });
             if (!response.ok) throw new Error('Failed to generate scenario.');
             const data = await response.json();
-            const resultText = data.text;
-            setScenario(resultText);
-            scenarioCache.set(cacheKey, resultText);
+            // FIX: Added type check to safely handle API response and prevent assigning 'unknown' to a string state.
+            if (data && typeof data.text === 'string') {
+                const resultText = data.text;
+                setScenario(resultText);
+                scenarioCache.set(cacheKey, resultText);
+            } else {
+                throw new Error('Invalid response from AI service');
+            }
         } catch (err: any) {
             setError('Failed to generate scenario. Please try again later.');
         } finally {

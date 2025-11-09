@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { CloseIcon } from '../../icons/EliteIcons.tsx';
 import Button from '../../ui/Button.tsx';
 import { BlogPost } from '../../../data/blogData.ts';
+import FileUpload from '../../FileUpload.tsx';
 
 interface BlogEditorModalProps {
     post: Partial<BlogPost> | null;
@@ -11,11 +12,44 @@ interface BlogEditorModalProps {
 
 const BlogEditorModal: React.FC<BlogEditorModalProps> = ({ post, onClose, onSave }) => {
     const [editedPost, setEditedPost] = useState(post || { author: 'Admin' });
+    const [isUploading, setIsUploading] = useState(false);
+    const [uploadError, setUploadError] = useState('');
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setEditedPost(prev => ({ ...prev, [name]: value }));
     };
+
+    const handleImageUpload = async (file: File | null) => {
+        if (!file) {
+            setEditedPost(prev => ({ ...prev, image: '' }));
+            return;
+        }
+
+        setIsUploading(true);
+        setUploadError('');
+
+        try {
+            const response = await fetch(`/api/upload?filename=${encodeURIComponent(file.name)}`, {
+                method: 'POST',
+                body: file,
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Upload failed');
+            }
+
+            const newBlob = await response.json();
+            setEditedPost(prev => ({ ...prev, image: newBlob.url }));
+        } catch (error) {
+            console.error('Upload error:', error);
+            setUploadError('Image upload failed. Please try again.');
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -43,10 +77,21 @@ const BlogEditorModal: React.FC<BlogEditorModalProps> = ({ post, onClose, onSave
                                 <input id="author" name="author" type="text" value={editedPost.author || ''} onChange={handleChange} required className="w-full bg-gray-900 border border-gray-700 rounded-md px-3 py-2 text-gray-300 focus:ring-2 focus:ring-cyan-500" />
                             </div>
                             <div>
-                                <label htmlFor="image" className="block text-sm font-medium text-gray-400 mb-1">Image URL</label>
-                                <input id="image" name="image" type="text" value={editedPost.image || ''} onChange={handleChange} required className="w-full bg-gray-900 border border-gray-700 rounded-md px-3 py-2 text-gray-300 focus:ring-2 focus:ring-cyan-500" />
+                                <FileUpload
+                                    label="Article Image"
+                                    onFileSelect={handleImageUpload}
+                                    acceptedTypes="image/jpeg, image/png, image/webp"
+                                />
+                                {isUploading && <p className="text-sm text-cyan-400 mt-2">Uploading...</p>}
+                                {uploadError && <p className="text-sm text-red-400 mt-2">{uploadError}</p>}
                             </div>
                         </div>
+                        {editedPost.image && !isUploading && (
+                            <div className="mt-2">
+                                <p className="text-sm text-gray-400 mb-2">Image Preview:</p>
+                                <img src={editedPost.image} alt="Preview" className="w-full h-auto max-h-48 object-cover rounded-md border border-gray-700" />
+                            </div>
+                        )}
                         <div>
                             <label htmlFor="content" className="block text-sm font-medium text-gray-400 mb-1">Content</label>
                             <textarea id="content" name="content" value={editedPost.content || ''} onChange={handleChange} required rows={10} className="w-full bg-gray-900 border border-gray-700 rounded-md px-3 py-2 text-gray-300 focus:ring-2 focus:ring-cyan-500"></textarea>
